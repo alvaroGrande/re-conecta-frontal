@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2000" height="500" viewBox="0 0 2000 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .brand { font-family: Inter, Roboto, Arial, Helvetica, sans-serif; font-weight: 800; fill: #ffffff; }
+  </style>
+  <text x="0" y="360" class="brand" font-size="300">Re-Conecta</text>
+</svg>

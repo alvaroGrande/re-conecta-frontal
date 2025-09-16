@@ -2,7 +2,11 @@
   <header class="bg-primary text-white shadow-md">
     <div class="max-w-6xl mx-auto px-4 flex justify-between items-center h-16">
       <!-- Logo -->
-      <h1 class="text-xl font-bold">RE Conecta</h1>
+      <h1 class="text-xl font-bold">
+        <RouterLink to="/">
+          <img :src="logo" alt="Re-Conecta Logo" class="h-8"/>
+        </RouterLink>
+      </h1>
 
       <!-- Menú de escritorio -->
       <nav class="hidden md:flex space-x-6">
@@ -54,6 +58,7 @@
 <script setup>
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import logo from '../assets/re-conecta.svg'
 
 const isOpen = ref(false)
 </script>
