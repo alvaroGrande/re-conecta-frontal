@@ -1,0 +1,9 @@
+{
+  "name": "eslint-plugin-reconecta",
+  "version": "1.0.0",
+  "description": "Reglas ESLint personalizadas para reConecta",
+  "main": "index.js",
+  "keywords": ["eslint", "plugin", "reconecta"],
+  "author": "reConecta Team",
+  "license": "MIT"
+}

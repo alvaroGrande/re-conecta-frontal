@@ -1,5 +1,5 @@
 <script setup>
-import { TIPO_PAGO_CURSO, TIPO_CURSO } from '../helpers/constants.js'
+import { TIPO_PAGO_CURSO, TIPO_CURSO } from '@helpers/constants.js'
 defineProps({
   tipo: {
     type: String,

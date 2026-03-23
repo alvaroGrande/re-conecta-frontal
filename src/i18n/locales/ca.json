@@ -1,0 +1,267 @@
+{
+  "app": {
+    "name": "reConecta",
+    "logout": "Tancar Sessió"
+  },
+  "nav": {
+    "home": "Inici",
+    "dashboard": "Tauler",
+    "workshops": "Tallers",
+    "surveys": "Enquestes",
+    "users": "Usuaris",
+    "contact": "Contacte",
+    "profile": "Perfil",
+    "videoCall": "Videotrucada",
+    "calendar": "Calendari"
+  },
+  "dashboard": {
+    "title": "Tauler d'Administració",
+    "subtitle": "Vista general del sistema reConecta",
+    "stats": {
+      "totalUsers": "Total Usuaris",
+      "activeUsers": "Usuaris Actius",
+      "connectedNow": "Connectats Ara",
+      "activeWorkshops": "Tallers Actius",
+      "workshopsThisMonth": "aquest mes",
+      "activeSurveys": "Enquestes Actives",
+      "surveyResponses": "respostes totals",
+      "activeToday": "actius avui",
+      "viewDetails": "Veure detalls"
+    },
+    "connectedUsers": {
+      "title": "Usuaris Connectats en Temps Real",
+      "refresh": "Actualitzar",
+      "noUsers": "No hi ha usuaris connectats en aquest moment",
+      "online": "En línia",
+      "lastActivity": "Última Activitat",
+      "user": "Usuari",
+      "never": "Mai",
+      "justNow": "Ara mateix",
+      "minutesAgo": "Fa {count} minuts",
+      "hoursAgo": "Fa {count} hores"
+    },
+    "recentActivity": {
+      "title": "Activitat Recent del Sistema",
+      "noActivity": "No hi ha activitat recent",
+      "viewAll": "Veure {count} activitats"
+    },
+    "scheduledTasks": "Tasques Programades",
+    "queryStats": "Estadístiques de Consultes"
+  },
+  "auth": {
+    "login": "Iniciar Sessió",
+    "loginTitle": "Iniciar sessió",
+    "loginSubtitle": "Accedeix amb el teu usuari i contrasenya",
+    "user": "Usuari",
+    "email": "Correu Electrònic",
+    "password": "Contrasenya",
+    "rememberMe": "Recorda'm",
+    "forgotPassword": "Has oblidat la contrasenya?",
+    "loginButton": "Entrar",
+    "loggingIn": "Verificant…",
+    "welcome": "Benvingut a reConecta",
+    "showPassword": "Mostrar contrasenya",
+    "hidePassword": "Ocultar contrasenya",
+    "userPlaceholder": "usuari@exemple.com o nom",
+    "noAccount": "No tens compte?",
+    "register": "Registra't"
+  },
+  "profile": {
+    "title": "El Meu Perfil",
+    "subtitle": "Administra la teva informació personal i foto de perfil",
+    "photo": {
+      "title": "Foto de Perfil",
+      "select": "Seleccionar Foto",
+      "save": "Guardar Foto",
+      "cancel": "Cancel·lar",
+      "format": "JPG, PNG o GIF. Màxim 5MB",
+      "preview": "Vista prèvia"
+    },
+    "personalInfo": {
+      "title": "Informació Personal",
+      "name": "Nom",
+      "namePlaceholder": "El teu nom",
+      "lastName": "Cognoms",
+      "lastNamePlaceholder": "Els teus cognoms",
+      "email": "Correu Electrònic",
+      "emailPlaceholder": "tu@email.com",
+      "phone": "Telèfon",
+      "phonePlaceholder": "+34 600 000 000",
+      "update": "Actualitzar Informació"
+    },
+    "security": {
+      "title": "Seguretat",
+      "changePassword": "Canviar Contrasenya",
+      "currentPassword": "Contrasenya Actual",
+      "newPassword": "Nova Contrasenya",
+      "confirmPassword": "Confirmar Contrasenya",
+      "updatePassword": "Actualitzar Contrasenya"
+    },
+    "roleInfo": {
+      "title": "Informació del Rol",
+      "currentRole": "Rol Actual",
+      "permissions": "Permisos"
+    }
+  },
+  "users": {
+    "title": "Gestió d'Usuaris",
+    "create": "Crear Usuari",
+    "edit": "Editar Usuari",
+    "delete": "Eliminar Usuari",
+    "name": "Nom",
+    "lastName": "Cognoms",
+    "email": "Email",
+    "role": "Rol",
+    "active": "Actiu",
+    "actions": "Accions",
+    "phone": "Telèfon",
+    "photo": "Foto",
+    "noUsers": "No hi ha usuaris disponibles",
+    "search": "Cercar usuaris...",
+    "roles": {
+      "admin": "Administrador",
+      "instructor": "Instructor",
+      "user": "Usuari"
+    }
+  },
+  "workshops": {
+    "title": "Tallers",
+    "create": "Crear Taller",
+    "edit": "Editar Taller",
+    "name": "Nom del Taller",
+    "description": "Descripció",
+    "date": "Data",
+    "category": "Categoria",
+    "active": "Actiu",
+    "enroll": "Inscriure's",
+    "noWorkshops": "No hi ha tallers disponibles",
+    "startDate": "Data d'Inici",
+    "endDate": "Data de Fi",
+    "participants": "Participants",
+    "status": "Estat"
+  },
+  "surveys": {
+    "title": "Enquestes",
+    "create": "Crear Enquesta",
+    "answer": "Respondre",
+    "results": "Veure Resultats",
+    "question": "Pregunta",
+    "type": "Tipus",
+    "noSurveys": "No hi ha enquestes disponibles",
+    "active": "Activa",
+    "completed": "Completada",
+    "pending": "Pendent",
+    "responses": "Respostes"
+  },
+  "notifications": {
+    "title": "Notificacions",
+    "markAllRead": "Marcar totes com a llegides",
+    "noNotifications": "No tens notificacions",
+    "new": "Nova",
+    "send": "Enviar Notificació",
+    "read": "Llegida",
+    "unread": "No llegida",
+    "delete": "Eliminar",
+    "type": "Tipus"
+  },
+  "contacts": {
+    "title": "Contactes",
+    "instructor": "Instructor",
+    "mainInstructor": "Instructor Principal",
+    "noContacts": "No hi ha contactes disponibles"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancel·lar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Veure",
+    "search": "Cercar",
+    "filter": "Filtrar",
+    "loading": "Carregant...",
+    "yes": "Sí",
+    "no": "No",
+    "confirm": "Confirmar",
+    "close": "Tancar",
+    "send": "Enviar",
+    "back": "Tornar",
+    "next": "Següent",
+    "previous": "Anterior",
+    "actions": "Accions",
+    "date": "Data",
+    "time": "Hora",
+    "status": "Estat",
+    "description": "Descripció",
+    "title": "Títol",
+    "content": "Contingut",
+    "noData": "No hi ha dades disponibles"
+  },
+  "messages": {
+    "success": "Operació exitosa",
+    "error": "S'ha produït un error",
+    "confirmDelete": "Estàs segur d'eliminar aquest element?",
+    "saved": "Guardat correctament",
+    "deleted": "Eliminat correctament",
+    "updated": "Actualitzat correctament",
+    "created": "Creat correctament",
+    "uploadSuccess": "Arxiu pujat correctament",
+    "uploadError": "Error en pujar l'arxiu"
+  },
+  "errors": {
+    "required": "Aquest camp és obligatori",
+    "invalidEmail": "Email invàlid",
+    "minLength": "Mínim {count} caràcters",
+    "maxLength": "Màxim {count} caràcters",
+    "passwordMismatch": "Les contrasenyes no coincideixen"
+  },
+  "inactivity": {
+    "title": "Sessió Inactiva",
+    "message": "La teva sessió es tancarà en {seconds} segons",
+    "clickToContinue": "Fes clic al botó per continuar",
+    "continue": "Continuar"
+  },
+  "impersonation": {
+    "viewing": "Vista d'usuari personificat",
+    "returnToAccount": "Tornar al meu compte"
+  },
+  "footer": {
+    "platform": "Plataforma d'educació connectada",
+    "rights": "Tots els drets reservats"
+  },
+  "notFound": {
+    "title": "Pàgina no trobada",
+    "message": "Ho sentim, la pàgina que cerques no existeix o ha estat moguda.",
+    "goBack": "Tornar enrere",
+    "goHome": "Anar a l'inici",
+    "helpText": "Necessites ajuda? Explora aquestes opcions:",
+    "services": "Serveis",
+    "contact": "Contacte",
+    "about": "Sobre nosaltres"
+  },
+  "calendar": {
+    "title": "Calendari",
+    "userSubtitle": "Gestiona els teus recordatoris personals",
+    "supervisorSubtitle": "Gestiona recordatoris de l'equip",
+    "addReminder": "Afegir Recordatori",
+    "newReminder": "Nou Recordatori",
+    "reminderTitle": "Títol",
+    "titlePlaceholder": "Ex: Reunió amb l'equip",
+    "description": "Descripció",
+    "descriptionPlaceholder": "Detalls addicionals del recordatori",
+    "date": "Data",
+    "time": "Hora",
+    "save": "Desar",
+    "cancel": "Cancel·lar",
+    "close": "Tancar",
+    "noReminders": "No hi ha recordatoris per a aquest dia",
+    "confirmDelete": "Estàs segur que vols eliminar aquest recordatori?",
+    "deleteReminder": "Eliminar recordatori",
+    "showAdminReminders": "Mostrar recordatoris d'administradors",
+    "showUserReminders": "Mostrar recordatoris d'usuaris",
+    "allUsers": "Tots els usuaris",
+    "adminReminder": "Admin",
+    "userReminder": "Usuari",
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Mes següent"
+  }
+}

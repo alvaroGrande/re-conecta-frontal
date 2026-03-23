@@ -1,0 +1,269 @@
+{
+  "app": {
+    "name": "reConecta",
+    "logout": "Cerrar Sesión"
+  },
+  "nav": {
+    "home": "Inicio",
+    "dashboard": "Panel",
+    "workshops": "Talleres",
+    "surveys": "Encuestas",
+    "users": "Usuarios",
+    "contact": "Contactos",
+    "profile": "Perfil",
+    "videoCall": "Videollamada",
+    "calendar": "Calendario"
+  },
+  "dashboard": {
+    "title": "Panel de Administración",
+    "subtitle": "Vista general del sistema reConecta",
+    "stats": {
+      "totalUsers": "Total Usuarios",
+      "activeUsers": "Usuarios Activos",
+      "connectedNow": "Conectados Ahora",
+      "activeWorkshops": "Talleres Activos",
+      "workshopsThisMonth": "este mes",
+      "activeSurveys": "Encuestas Activas",
+      "surveyResponses": "respuestas totales",
+      "activeToday": "activos hoy",
+      "viewDetails": "Ver detalles"
+    },
+    "connectedUsers": {
+      "title": "Usuarios Conectados en Tiempo Real",
+      "refresh": "Actualizar",
+      "noUsers": "No hay usuarios conectados en este momento",
+      "online": "En línea",
+      "lastActivity": "Última Actividad",
+      "user": "Usuario",
+      "never": "Nunca",
+      "justNow": "Ahora mismo",
+      "minutesAgo": "Hace {count} minutos",
+      "hoursAgo": "Hace {count} horas"
+    },
+    "recentActivity": {
+      "title": "Actividad Reciente del Sistema",
+      "noActivity": "No hay actividad reciente",
+      "viewAll": "Ver {count} actividades"
+    },
+    "scheduledTasks": "Tareas Programadas",
+    "queryStats": "Estadísticas de Consultas"
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "loginTitle": "Iniciar sesión",
+    "loginSubtitle": "Accede con tu usuario y contraseña",
+    "user": "Usuario",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "rememberMe": "Recordarme",
+    "forgotPassword": "¿Olvidaste la contraseña?",
+    "loginButton": "Entrar",
+    "loggingIn": "Verificando…",
+    "welcome": "Bienvenido a reConecta",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña",
+    "userPlaceholder": "usuario{'@'}ejemplo.com o nombre",
+    "noAccount": "¿No tienes cuenta?",
+    "register": "Regístrate"
+  },
+  "profile": {
+    "title": "Mi Perfil",
+    "subtitle": "Administra tu información personal y foto de perfil",
+    "photo": {
+      "title": "Foto de Perfil",
+      "select": "Seleccionar Foto",
+      "save": "Guardar Foto",
+      "cancel": "Cancelar",
+      "format": "JPG, PNG o GIF. Máximo 5MB",
+      "preview": "Vista previa"
+    },
+    "personalInfo": {
+      "title": "Información Personal",
+      "name": "Nombre",
+      "namePlaceholder": "Tu nombre",
+      "lastName": "Apellidos",
+      "lastNamePlaceholder": "Tus apellidos",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "tu@email.com",
+      "phone": "Teléfono",
+      "phonePlaceholder": "+34 600 000 000",
+      "update": "Actualizar Información"
+    },
+    "security": {
+      "title": "Seguridad",
+      "changePassword": "Cambiar Contraseña",
+      "currentPassword": "Contraseña Actual",
+      "newPassword": "Nueva Contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "updatePassword": "Actualizar Contraseña"
+    },
+    "roleInfo": {
+      "title": "Información del Rol",
+      "currentRole": "Rol Actual",
+      "permissions": "Permisos"
+    }
+  },
+  "users": {
+    "title": "Gestión de Usuarios",
+    "create": "Crear Usuario",
+    "edit": "Editar Usuario",
+    "delete": "Eliminar Usuario",
+    "name": "Nombre",
+    "lastName": "Apellidos",
+    "email": "Email",
+    "role": "Rol",
+    "active": "Activo",
+    "actions": "Acciones",
+    "phone": "Teléfono",
+    "photo": "Foto",
+    "noUsers": "No hay usuarios disponibles",
+    "search": "Buscar usuarios...",
+    "roles": {
+      "admin": "Administrador",
+      "instructor": "Instructor",
+      "user": "Usuario"
+    }
+  },
+  "workshops": {
+    "title": "Talleres",
+    "create": "Crear Taller",
+    "edit": "Editar Taller",
+    "name": "Nombre del Taller",
+    "description": "Descripción",
+    "date": "Fecha",
+    "category": "Categoría",
+    "active": "Activo",
+    "enroll": "Inscribirse",
+    "noWorkshops": "No hay talleres disponibles",
+    "startDate": "Fecha de Inicio",
+    "endDate": "Fecha de Fin",
+    "participants": "Participantes",
+    "status": "Estado"
+  },
+  "surveys": {
+    "title": "Encuestas",
+    "create": "Crear Encuesta",
+    "answer": "Responder",
+    "results": "Ver Resultados",
+    "question": "Pregunta",
+    "type": "Tipo",
+    "noSurveys": "No hay encuestas disponibles",
+    "active": "Activa",
+    "completed": "Completada",
+    "pending": "Pendiente",
+    "responses": "Respuestas"
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "markAllRead": "Marcar todas como leídas",
+    "noNotifications": "No tienes notificaciones",
+    "new": "Nueva",
+    "send": "Enviar Notificación",
+    "read": "Leída",
+    "unread": "No leída",
+    "delete": "Eliminar",
+    "type": "Tipo"
+  },
+  "contacts": {
+    "title": "Contactos",
+    "instructor": "Instructor",
+    "mainInstructor": "Instructor Principal",
+    "noContacts": "No hay contactos disponibles"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "loading": "Cargando...",
+    "yes": "Sí",
+    "no": "No",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "send": "Enviar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "actions": "Acciones",
+    "date": "Fecha",
+    "time": "Hora",
+    "status": "Estado",
+    "description": "Descripción",
+    "title": "Título",
+    "content": "Contenido",
+    "noData": "No hay datos disponibles"
+  },
+  "messages": {
+    "success": "Operación exitosa",
+    "error": "Ha ocurrido un error",
+    "confirmDelete": "¿Estás seguro de eliminar este elemento?",
+    "saved": "Guardado correctamente",
+    "deleted": "Eliminado correctamente",
+    "updated": "Actualizado correctamente",
+    "created": "Creado correctamente",
+    "uploadSuccess": "Archivo subido correctamente",
+    "uploadError": "Error al subir el archivo"
+  },
+  "errors": {
+    "required": "Este campo es obligatorio",
+    "invalidEmail": "Email inválido",
+    "minLength": "Mínimo {count} caracteres",
+    "maxLength": "Máximo {count} caracteres",
+    "passwordMismatch": "Las contraseñas no coinciden"
+  },
+  "inactivity": {
+    "title": "Sesión Inactiva",
+    "message": "Tu sesión se cerrará en {seconds} segundos",
+    "clickToContinue": "Haz clic en el botón para continuar",
+    "continue": "Continuar"
+  },
+  "impersonation": {
+    "viewing": "Vista de usuario impersonado",
+    "returnToAccount": "Volver a mi cuenta"
+  },
+  "footer": {
+    "platform": "Plataforma de educación conectada",
+    "rights": "Todos los derechos reservados"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "message": "Lo sentimos, la página que buscas no existe o ha sido movida.",
+    "goBack": "Volver atrás",
+    "goHome": "Ir al inicio",
+    "helpText": "¿Necesitas ayuda? Explora estas opciones:",
+    "services": "Servicios",
+    "contact": "Contactos",
+    "about": "Acerca de"
+  },
+  "calendar": {
+    "title": "Calendario",
+    "userSubtitle": "Gestiona tus recordatorios personales",
+    "supervisorSubtitle": "Gestiona recordatorios del equipo",
+    "addReminder": "Añadir Recordatorio",
+    "newReminder": "Nuevo Recordatorio",
+    "reminderTitle": "Título",
+    "titlePlaceholder": "Ej: Reunión con el equipo",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Detalles adicionales del recordatorio",
+    "date": "Fecha",
+    "time": "Hora",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "noReminders": "No hay recordatorios para este día",
+    "confirmDelete": "¿Estás seguro de que deseas eliminar este recordatorio?",
+    "deleteReminder": "Eliminar recordatorio",
+    "showAdminReminders": "Mostrar recordatorios de administradores",
+    "showUserReminders": "Mostrar recordatorios de usuarios",
+    "allUsers": "Todos los usuarios",
+    "searchUser": "Buscar usuario...",
+    "noUsersFound": "No se encontraron usuarios",
+    "adminReminder": "Admin",
+    "userReminder": "Usuario",
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Mes siguiente"
+  }
+}

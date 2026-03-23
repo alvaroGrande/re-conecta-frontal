@@ -1,0 +1,267 @@
+{
+  "app": {
+    "name": "reConecta",
+    "logout": "Sign Out"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "workshops": "Workshops",
+    "surveys": "Surveys",
+    "users": "Users",
+    "contact": "Contact",
+    "profile": "Profile",
+    "videoCall": "Video Call",
+    "calendar": "Calendar"
+  },
+  "dashboard": {
+    "title": "Administration Dashboard",
+    "subtitle": "reConecta system overview",
+    "stats": {
+      "totalUsers": "Total Users",
+      "activeUsers": "Active Users",
+      "connectedNow": "Connected Now",
+      "activeWorkshops": "Active Workshops",
+      "workshopsThisMonth": "this month",
+      "activeSurveys": "Active Surveys",
+      "surveyResponses": "total responses",
+      "activeToday": "active today",
+      "viewDetails": "View details"
+    },
+    "connectedUsers": {
+      "title": "Real-Time Connected Users",
+      "refresh": "Refresh",
+      "noUsers": "No users connected at the moment",
+      "online": "Online",
+      "lastActivity": "Last Activity",
+      "user": "User",
+      "never": "Never",
+      "justNow": "Just now",
+      "minutesAgo": "{count} minutes ago",
+      "hoursAgo": "{count} hours ago"
+    },
+    "recentActivity": {
+      "title": "Recent System Activity",
+      "noActivity": "No recent activity",
+      "viewAll": "View {count} activities"
+    },
+    "scheduledTasks": "Scheduled Tasks",
+    "queryStats": "Query Statistics"
+  },
+  "auth": {
+    "login": "Sign In",
+    "loginTitle": "Sign in",
+    "loginSubtitle": "Access with your username and password",
+    "user": "User",
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "loginButton": "Enter",
+    "loggingIn": "Verifying…",
+    "welcome": "Welcome to reConecta",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "userPlaceholder": "user@example.com or username",
+    "noAccount": "Don't have an account?",
+    "register": "Sign up"
+  },
+  "profile": {
+    "title": "My Profile",
+    "subtitle": "Manage your personal information and profile photo",
+    "photo": {
+      "title": "Profile Photo",
+      "select": "Select Photo",
+      "save": "Save Photo",
+      "cancel": "Cancel",
+      "format": "JPG, PNG or GIF. Maximum 5MB",
+      "preview": "Preview"
+    },
+    "personalInfo": {
+      "title": "Personal Information",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Your last name",
+      "email": "Email",
+      "emailPlaceholder": "you@email.com",
+      "phone": "Phone",
+      "phonePlaceholder": "+34 600 000 000",
+      "update": "Update Information"
+    },
+    "security": {
+      "title": "Security",
+      "changePassword": "Change Password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "updatePassword": "Update Password"
+    },
+    "roleInfo": {
+      "title": "Role Information",
+      "currentRole": "Current Role",
+      "permissions": "Permissions"
+    }
+  },
+  "users": {
+    "title": "User Management",
+    "create": "Create User",
+    "edit": "Edit User",
+    "delete": "Delete User",
+    "name": "Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "role": "Role",
+    "active": "Active",
+    "actions": "Actions",
+    "phone": "Phone",
+    "photo": "Photo",
+    "noUsers": "No users available",
+    "search": "Search users...",
+    "roles": {
+      "admin": "Administrator",
+      "instructor": "Instructor",
+      "user": "User"
+    }
+  },
+  "workshops": {
+    "title": "Workshops",
+    "create": "Create Workshop",
+    "edit": "Edit Workshop",
+    "name": "Workshop Name",
+    "description": "Description",
+    "date": "Date",
+    "category": "Category",
+    "active": "Active",
+    "enroll": "Enroll",
+    "noWorkshops": "No workshops available",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "participants": "Participants",
+    "status": "Status"
+  },
+  "surveys": {
+    "title": "Surveys",
+    "create": "Create Survey",
+    "answer": "Answer",
+    "results": "View Results",
+    "question": "Question",
+    "type": "Type",
+    "noSurveys": "No surveys available",
+    "active": "Active",
+    "completed": "Completed",
+    "pending": "Pending",
+    "responses": "Responses"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "noNotifications": "You have no notifications",
+    "new": "New",
+    "send": "Send Notification",
+    "read": "Read",
+    "unread": "Unread",
+    "delete": "Delete",
+    "type": "Type"
+  },
+  "contacts": {
+    "title": "Contacts",
+    "instructor": "Instructor",
+    "mainInstructor": "Main Instructor",
+    "noContacts": "No contacts available"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "loading": "Loading...",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "close": "Close",
+    "send": "Send",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "actions": "Actions",
+    "date": "Date",
+    "time": "Time",
+    "status": "Status",
+    "description": "Description",
+    "title": "Title",
+    "content": "Content",
+    "noData": "No data available"
+  },
+  "messages": {
+    "success": "Successful operation",
+    "error": "An error has occurred",
+    "confirmDelete": "Are you sure you want to delete this item?",
+    "saved": "Saved successfully",
+    "deleted": "Deleted successfully",
+    "updated": "Updated successfully",
+    "created": "Created successfully",
+    "uploadSuccess": "File uploaded successfully",
+    "uploadError": "Error uploading file"
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email",
+    "minLength": "Minimum {count} characters",
+    "maxLength": "Maximum {count} characters",
+    "passwordMismatch": "Passwords do not match"
+  },
+  "inactivity": {
+    "title": "Inactive Session",
+    "message": "Your session will close in {seconds} seconds",
+    "clickToContinue": "Click the button to continue",
+    "continue": "Continue"
+  },
+  "impersonation": {
+    "viewing": "Impersonating user",
+    "returnToAccount": "Return to my account"
+  },
+  "footer": {
+    "platform": "Connected education platform",
+    "rights": "All rights reserved"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "message": "Sorry, the page you are looking for does not exist or has been moved.",
+    "goBack": "Go back",
+    "goHome": "Go home",
+    "helpText": "Need help? Explore these options:",
+    "services": "Services",
+    "contact": "Contact",
+    "about": "About"
+  },
+  "calendar": {
+    "title": "Calendar",
+    "userSubtitle": "Manage your personal reminders",
+    "supervisorSubtitle": "Manage team reminders",
+    "addReminder": "Add Reminder",
+    "newReminder": "New Reminder",
+    "reminderTitle": "Title",
+    "titlePlaceholder": "Ex: Team meeting",
+    "description": "Description",
+    "descriptionPlaceholder": "Additional reminder details",
+    "date": "Date",
+    "time": "Time",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "noReminders": "No reminders for this day",
+    "confirmDelete": "Are you sure you want to delete this reminder?",
+    "deleteReminder": "Delete reminder",
+    "showAdminReminders": "Show admin reminders",
+    "showUserReminders": "Show user reminders",
+    "allUsers": "All users",
+    "adminReminder": "Admin",
+    "userReminder": "User",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month"
+  }
+}

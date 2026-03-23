@@ -28,3 +28,14 @@ export function showSuccess(summary, message) {
     });
   }
 }
+
+export function showWarn(summary, message) {
+  if (toast) {
+    toast.add({
+      severity: "warn",
+      summary: summary || "Advertencia",
+      detail: message,
+      life: 3000,
+    });
+  }
+}

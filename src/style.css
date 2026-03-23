@@ -1,2 +1,341 @@
 @import "tailwindcss";
 @import "tailwindcss-primeui";
+
+/* Dark mode variant para Tailwind v4: activa dark: utilities con clase .p-dark en <html> */
+@custom-variant dark (&:where(.p-dark, .p-dark *));
+
+/* Transición suave al cambiar de tema */
+html,
+body {
+  font-size: 14px; /* tamaño base reducido (por defecto 16px) */
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* ── Modo oscuro global (sin depender de Tailwind utilities) ── */
+html.p-dark {
+  color-scheme: dark;
+}
+
+html.p-dark body {
+  background-color: #0f172a;
+  color: #e2e8f0;
+}
+
+/* Estilos globales para DataTable de PrimeVue */
+.p-datatable {
+  background: transparent;
+}
+
+.p-datatable .p-datatable-header {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  background: #f3f4f6;
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.75rem 1rem;
+  border-color: #d1d5db;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  border-color: #e5e7eb;
+  transition: background-color 0.2s;
+}
+
+.p-datatable .p-datatable-tbody > tr:hover {
+  background-color: #f9fafb;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.75rem 1rem;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.p-datatable .p-paginator {
+  background: transparent;
+  border-top: 1px solid #e5e7eb;
+  padding: 1rem;
+  justify-content: flex-end;
+}
+
+.p-datatable .p-paginator .p-paginator-current {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.p-datatable .p-paginator .p-paginator-page {
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding: 0 0.5rem;
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  transition: all 0.2s;
+}
+
+.p-datatable .p-paginator .p-paginator-page:hover {
+  background-color: #0B5E8A;
+  border-color: #0B5E8A;
+  color: white;
+}
+
+.p-datatable .p-paginator .p-paginator-page.p-paginator-page-active {
+  background-color: #0B5E8A;
+  border-color: #0B5E8A;
+  color: white;
+}
+
+.p-datatable .p-paginator-rpp-options {
+  min-width: 3rem;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background: white;
+}
+
+.p-datatable .p-paginator-rpp-options select {
+  background: white;
+  border: none;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.p-datatable .p-datatable-emptymessage > tr > td {
+  padding: 2rem;
+  text-align: center;
+  color: #6b7280;
+}
+
+.p-datatable .p-datatable-loading-icon {
+  color: #0B5E8A;
+}
+
+/* ── Modo oscuro: DataTable ── */
+.p-dark .p-datatable .p-datatable-thead > tr > th {
+  background: #1e293b;
+  color: #e2e8f0;
+  border-color: #334155;
+}
+
+.p-dark .p-datatable .p-datatable-tbody > tr {
+  border-color: #334155;
+}
+
+.p-dark .p-datatable .p-datatable-tbody > tr:hover {
+  background-color: #1e293b;
+}
+
+.p-dark .p-datatable .p-datatable-tbody > tr > td {
+  color: #cbd5e1;
+}
+
+.p-dark .p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(odd) {
+  background-color: #0f172a;
+}
+
+.p-dark .p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #1e293b;
+}
+
+.p-dark .p-datatable .p-paginator {
+  border-color: #334155;
+}
+
+.p-dark .p-datatable .p-paginator .p-paginator-current {
+  color: #94a3b8;
+}
+
+.p-dark .p-datatable .p-paginator .p-paginator-page {
+  border-color: #475569;
+  color: #cbd5e1;
+}
+
+.p-dark .p-datatable .p-paginator-rpp-options {
+  background: #1e293b;
+  border-color: #475569;
+}
+
+.p-dark .p-datatable .p-paginator-rpp-options select {
+  background: #1e293b;
+  color: #cbd5e1;
+}
+
+.p-dark .p-datatable .p-datatable-emptymessage > tr > td {
+  color: #94a3b8;
+}
+
+/* ══════════════════════════════════════════════
+   DARK MODE – OVERRIDES GLOBALES
+   Cubre los patrones Tailwind más comunes usados
+   en páginas y componentes del proyecto.
+   ══════════════════════════════════════════════ */
+
+/* — Fondos — */
+html.p-dark .bg-white {
+  background-color: #1e293b !important;
+}
+html.p-dark .bg-gray-50 {
+  background-color: #0f172a !important;
+}
+html.p-dark .bg-gray-100 {
+  background-color: #1e293b !important;
+}
+html.p-dark .bg-gray-200 {
+  background-color: #293548 !important;
+}
+
+/* Degradados grises → oscuros */
+html.p-dark [class*="from-gray-50"],
+html.p-dark [class*="from-gray-100"] {
+  --tw-gradient-from: #0f172a !important;
+}
+html.p-dark [class*="to-white"],
+html.p-dark [class*="to-gray-50"],
+html.p-dark [class*="to-gray-100"] {
+  --tw-gradient-to: #1e293b !important;
+}
+
+/* — Textos — */
+html.p-dark .text-gray-900 { color: #f1f5f9 !important; }
+html.p-dark .text-gray-800 { color: #e2e8f0 !important; }
+html.p-dark .text-gray-700 { color: #cbd5e1 !important; }
+html.p-dark .text-gray-600 { color: #94a3b8 !important; }
+html.p-dark .text-gray-500 { color: #64748b !important; }
+html.p-dark .text-gray-400 { color: #475569 !important; }
+
+/* — Bordes — */
+html.p-dark .border-gray-100 { border-color: #1e293b !important; }
+html.p-dark .border-gray-200 { border-color: #334155 !important; }
+html.p-dark .border-gray-300 { border-color: #475569 !important; }
+
+/* — Sombras — */
+html.p-dark .shadow-sm   { box-shadow: 0 1px 2px 0 rgba(0,0,0,.5) !important; }
+html.p-dark .shadow      { box-shadow: 0 1px 3px 0 rgba(0,0,0,.5), 0 1px 2px -1px rgba(0,0,0,.5) !important; }
+html.p-dark .shadow-md   { box-shadow: 0 4px 6px -1px rgba(0,0,0,.6), 0 2px 4px -2px rgba(0,0,0,.6) !important; }
+html.p-dark .shadow-lg   { box-shadow: 0 10px 15px -3px rgba(0,0,0,.7), 0 4px 6px -4px rgba(0,0,0,.7) !important; }
+html.p-dark .shadow-xl   { box-shadow: 0 20px 25px -5px rgba(0,0,0,.7), 0 8px 10px -6px rgba(0,0,0,.7) !important; }
+
+/* — Inputs nativos — */
+html.p-dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+html.p-dark textarea,
+html.p-dark select {
+  background-color: #1e293b !important;
+  color: #e2e8f0 !important;
+  border-color: #475569 !important;
+}
+html.p-dark input::placeholder,
+html.p-dark textarea::placeholder {
+  color: #64748b !important;
+}
+html.p-dark input:focus,
+html.p-dark textarea:focus,
+html.p-dark select:focus {
+  border-color: #0B5E8A !important;
+  outline-color: #0B5E8A !important;
+}
+
+/* — Hover en listas y tablas — */
+html.p-dark .hover\:bg-gray-50:hover  { background-color: #1e293b !important; }
+html.p-dark .hover\:bg-gray-100:hover { background-color: #293548 !important; }
+html.p-dark .hover\:shadow-xl:hover   { box-shadow: 0 20px 25px -5px rgba(0,0,0,.7) !important; }
+
+/* — Ring (focus outline) — */
+html.p-dark .ring-gray-200 { --tw-ring-color: #334155 !important; }
+
+/* — Divider lines — */
+html.p-dark hr,
+html.p-dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #334155 !important;
+}
+
+/* ══════════════════════════════════════════════
+   DARK MODE – PrimeVue Select / Dropdown
+   Suaviza el negro puro del fondo del panel y
+   las opciones que genera el preset Aura.
+   ══════════════════════════════════════════════ */
+
+/* Caja del trigger (el input visible) */
+.p-dark .p-select,
+.p-dark .p-multiselect {
+  background-color: #1e293b !important;
+  border-color: #475569 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Panel flotante (overlay con las opciones) */
+.p-dark .p-select-overlay,
+.p-dark .p-multiselect-overlay,
+.p-dark .p-select-panel,
+.p-dark .p-multiselect-panel {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Lista interior */
+.p-dark .p-select-list,
+.p-dark .p-multiselect-list {
+  background-color: #1e293b !important;
+}
+
+/* Cada opción */
+.p-dark .p-select-option,
+.p-dark .p-multiselect-option {
+  background-color: transparent !important;
+  color: #cbd5e1 !important;
+}
+
+/* Hover sobre opción */
+.p-dark .p-select-option:not(.p-select-option-selected):hover,
+.p-dark .p-multiselect-option:not(.p-selected):hover {
+  background-color: #293548 !important;
+  color: #f1f5f9 !important;
+}
+
+/* Opción seleccionada */
+.p-dark .p-select-option.p-select-option-selected,
+.p-dark .p-select-option[aria-selected="true"],
+.p-dark .p-multiselect-option.p-selected {
+  background-color: #0a2d4a !important;
+  color: #7dd3fc !important;
+}
+
+/* Barra de búsqueda dentro del overlay (si hay filter) */
+.p-dark .p-select-filter,
+.p-dark .p-multiselect-filter {
+  background-color: #0f172a !important;
+  border-color: #475569 !important;
+  color: #e2e8f0 !important;
+}
+
+/* Placeholder del trigger */
+.p-dark .p-select-label.p-placeholder,
+.p-dark .p-multiselect-label.p-placeholder {
+  color: #64748b !important;
+}
+
+/* Texto del label cuando hay valor seleccionado */
+.p-dark .p-select-label,
+.p-dark .p-multiselect-label {
+  color: #e2e8f0 !important;
+}
+
+/* Icono flecha del trigger */
+.p-dark .p-select-dropdown .p-icon,
+.p-dark .p-multiselect-dropdown .p-icon {
+  color: #94a3b8 !important;
+}
+

@@ -1,0 +1,267 @@
+{
+  "app": {
+    "name": "reConecta",
+    "logout": "Pechar Sesión"
+  },
+  "nav": {
+    "home": "Inicio",
+    "dashboard": "Panel",
+    "workshops": "Obradoiros",
+    "surveys": "Enquisas",
+    "users": "Usuarios",
+    "contact": "Contacto",
+    "profile": "Perfil",
+    "videoCall": "Videochamada",
+    "calendar": "Calendario"
+  },
+  "dashboard": {
+    "title": "Panel de Administración",
+    "subtitle": "Vista xeral do sistema reConecta",
+    "stats": {
+      "totalUsers": "Total Usuarios",
+      "activeUsers": "Usuarios Activos",
+      "connectedNow": "Conectados Agora",
+      "activeWorkshops": "Obradoiros Activos",
+      "workshopsThisMonth": "este mes",
+      "activeSurveys": "Enquisas Activas",
+      "surveyResponses": "respostas totais",
+      "activeToday": "activos hoxe",
+      "viewDetails": "Ver detalles"
+    },
+    "connectedUsers": {
+      "title": "Usuarios Conectados en Tempo Real",
+      "refresh": "Actualizar",
+      "noUsers": "Non hai usuarios conectados neste momento",
+      "online": "En liña",
+      "lastActivity": "Última Actividade",
+      "user": "Usuario",
+      "never": "Nunca",
+      "justNow": "Agora mesmo",
+      "minutesAgo": "Hai {count} minutos",
+      "hoursAgo": "Hai {count} horas"
+    },
+    "recentActivity": {
+      "title": "Actividade Recente do Sistema",
+      "noActivity": "Non hai actividade recente",
+      "viewAll": "Ver {count} actividades"
+    },
+    "scheduledTasks": "Tarefas Programadas",
+    "queryStats": "Estatísticas de Consultas"
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "loginTitle": "Iniciar sesión",
+    "loginSubtitle": "Accede co teu usuario e contrasinal",
+    "user": "Usuario",
+    "email": "Correo Electrónico",
+    "password": "Contrasinal",
+    "rememberMe": "Lembrarme",
+    "forgotPassword": "Esqueciches o contrasinal?",
+    "loginButton": "Entrar",
+    "loggingIn": "Verificando…",
+    "welcome": "Benvido a reConecta",
+    "showPassword": "Mostrar contrasinal",
+    "hidePassword": "Ocultar contrasinal",
+    "userPlaceholder": "usuario@exemplo.com ou nome",
+    "noAccount": "Non tes conta?",
+    "register": "Rexístrate"
+  },
+  "profile": {
+    "title": "O Meu Perfil",
+    "subtitle": "Administra a túa información persoal e foto de perfil",
+    "photo": {
+      "title": "Foto de Perfil",
+      "select": "Seleccionar Foto",
+      "save": "Gardar Foto",
+      "cancel": "Cancelar",
+      "format": "JPG, PNG ou GIF. Máximo 5MB",
+      "preview": "Vista previa"
+    },
+    "personalInfo": {
+      "title": "Información Persoal",
+      "name": "Nome",
+      "namePlaceholder": "O teu nome",
+      "lastName": "Apelidos",
+      "lastNamePlaceholder": "Os teus apelidos",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "tu@email.com",
+      "phone": "Teléfono",
+      "phonePlaceholder": "+34 600 000 000",
+      "update": "Actualizar Información"
+    },
+    "security": {
+      "title": "Seguridade",
+      "changePassword": "Cambiar Contrasinal",
+      "currentPassword": "Contrasinal Actual",
+      "newPassword": "Novo Contrasinal",
+      "confirmPassword": "Confirmar Contrasinal",
+      "updatePassword": "Actualizar Contrasinal"
+    },
+    "roleInfo": {
+      "title": "Información do Rol",
+      "currentRole": "Rol Actual",
+      "permissions": "Permisos"
+    }
+  },
+  "users": {
+    "title": "Xestión de Usuarios",
+    "create": "Crear Usuario",
+    "edit": "Editar Usuario",
+    "delete": "Eliminar Usuario",
+    "name": "Nome",
+    "lastName": "Apelidos",
+    "email": "Email",
+    "role": "Rol",
+    "active": "Activo",
+    "actions": "Accións",
+    "phone": "Teléfono",
+    "photo": "Foto",
+    "noUsers": "Non hai usuarios dispoñibles",
+    "search": "Buscar usuarios...",
+    "roles": {
+      "admin": "Administrador",
+      "instructor": "Instructor",
+      "user": "Usuario"
+    }
+  },
+  "workshops": {
+    "title": "Obradoiros",
+    "create": "Crear Obradoiro",
+    "edit": "Editar Obradoiro",
+    "name": "Nome do Obradoiro",
+    "description": "Descrición",
+    "date": "Data",
+    "category": "Categoría",
+    "active": "Activo",
+    "enroll": "Inscribirse",
+    "noWorkshops": "Non hai obradoiros dispoñibles",
+    "startDate": "Data de Inicio",
+    "endDate": "Data de Fin",
+    "participants": "Participantes",
+    "status": "Estado"
+  },
+  "surveys": {
+    "title": "Enquisas",
+    "create": "Crear Enquisa",
+    "answer": "Responder",
+    "results": "Ver Resultados",
+    "question": "Pregunta",
+    "type": "Tipo",
+    "noSurveys": "Non hai enquisas dispoñibles",
+    "active": "Activa",
+    "completed": "Completada",
+    "pending": "Pendente",
+    "responses": "Respostas"
+  },
+  "notifications": {
+    "title": "Notificacións",
+    "markAllRead": "Marcar todas como lidas",
+    "noNotifications": "Non tes notificacións",
+    "new": "Nova",
+    "send": "Enviar Notificación",
+    "read": "Lida",
+    "unread": "Non lida",
+    "delete": "Eliminar",
+    "type": "Tipo"
+  },
+  "contacts": {
+    "title": "Contactos",
+    "instructor": "Instructor",
+    "mainInstructor": "Instructor Principal",
+    "noContacts": "Non hai contactos dispoñibles"
+  },
+  "common": {
+    "save": "Gardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "loading": "Cargando...",
+    "yes": "Si",
+    "no": "Non",
+    "confirm": "Confirmar",
+    "close": "Pechar",
+    "send": "Enviar",
+    "back": "Volver",
+    "next": "Seguinte",
+    "previous": "Anterior",
+    "actions": "Accións",
+    "date": "Data",
+    "time": "Hora",
+    "status": "Estado",
+    "description": "Descrición",
+    "title": "Título",
+    "content": "Contido",
+    "noData": "Non hai datos dispoñibles"
+  },
+  "messages": {
+    "success": "Operación exitosa",
+    "error": "Produciuse un erro",
+    "confirmDelete": "Estás seguro de eliminar este elemento?",
+    "saved": "Gardado correctamente",
+    "deleted": "Eliminado correctamente",
+    "updated": "Actualizado correctamente",
+    "created": "Creado correctamente",
+    "uploadSuccess": "Arquivo subido correctamente",
+    "uploadError": "Erro ao subir o arquivo"
+  },
+  "errors": {
+    "required": "Este campo é obrigatorio",
+    "invalidEmail": "Email inválido",
+    "minLength": "Mínimo {count} caracteres",
+    "maxLength": "Máximo {count} caracteres",
+    "passwordMismatch": "Os contrasinais non coinciden"
+  },
+  "inactivity": {
+    "title": "Sesión Inactiva",
+    "message": "A túa sesión pecharase en {seconds} segundos",
+    "clickToContinue": "Fai clic no botón para continuar",
+    "continue": "Continuar"
+  },
+  "impersonation": {
+    "viewing": "Vista de usuario personificado",
+    "returnToAccount": "Volver á miña conta"
+  },
+  "footer": {
+    "platform": "Plataforma de educación conectada",
+    "rights": "Todos os dereitos reservados"
+  },
+  "notFound": {
+    "title": "Páxina non atopada",
+    "message": "Sentímolo, a páxina que buscas non existe ou foi movida.",
+    "goBack": "Volver atrás",
+    "goHome": "Ir ao inicio",
+    "helpText": "Necesitas axuda? Explora estas opcións:",
+    "services": "Servizos",
+    "contact": "Contacto",
+    "about": "Acerca de"
+  },
+  "calendar": {
+    "title": "Calendario",
+    "userSubtitle": "Xestiona os teus recordatorios persoais",
+    "supervisorSubtitle": "Xestiona recordatorios do equipo",
+    "addReminder": "Engadir Recordatorio",
+    "newReminder": "Novo Recordatorio",
+    "reminderTitle": "Título",
+    "titlePlaceholder": "Ex: Reunión co equipo",
+    "description": "Descrición",
+    "descriptionPlaceholder": "Detalles adicionais do recordatorio",
+    "date": "Data",
+    "time": "Hora",
+    "save": "Gardar",
+    "cancel": "Cancelar",
+    "close": "Pechar",
+    "noReminders": "Non hai recordatorios para este día",
+    "confirmDelete": "Estás seguro de que desexas eliminar este recordatorio?",
+    "deleteReminder": "Eliminar recordatorio",
+    "showAdminReminders": "Mostrar recordatorios de administradores",
+    "showUserReminders": "Mostrar recordatorios de usuarios",
+    "allUsers": "Todos os usuarios",
+    "adminReminder": "Admin",
+    "userReminder": "Usuario",
+    "previousMonth": "Mes anterior",
+    "nextMonth": "Mes seguinte"
+  }
+}
