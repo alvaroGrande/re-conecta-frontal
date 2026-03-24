@@ -14,6 +14,7 @@
     "@heroicons/vue": "^2.2.0",
     "@primeuix/themes": "^1.2.3",
     "@tailwindcss/vite": "^4.2.1",
+    "@vercel/analytics": "^2.0.1",
     "@zoom/meetingsdk": "^5.0.4",
     "axios": "^1.12.2",
     "chart.js": "^4.5.1",

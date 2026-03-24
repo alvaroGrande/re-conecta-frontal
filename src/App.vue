@@ -1,4 +1,5 @@
 <template>
+  <Analytics />
   <div class="flex flex-col min-h-screen bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 transition-colors duration-200">
    <Toast />
     <ImpersonationBanner />
@@ -53,6 +54,7 @@
 </template>
 
 <script setup>
+import { Analytics } from '@vercel/analytics/vue';
 import { ref, onMounted } from "vue";
 import Header from '@layout/Header.vue'
 import Footer from '@layout/Footer.vue'
