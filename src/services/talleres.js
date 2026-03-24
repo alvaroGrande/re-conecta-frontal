@@ -1,8 +1,8 @@
 import api from './api'
 
-export const getTalleres = async () => {
-    const {data} = await api.get('/talleres')
-    return data
+export const getTalleres = async ({ page = 1, limit = 50 } = {}) => {
+    const {data} = await api.get('/talleres', { params: { page, limit } })
+    return data  // { data: [...], total, page, limit }
 }
 
 export const getTallerPorId = async (id) => {
@@ -106,4 +106,50 @@ export const getTallerArchivadoDetalle = async (id) => {
 export const patchAsistencia = async (tallerArchivadoId, usuarioId, asistio) => {
     const { data } = await api.patch(`/talleres/archivados/${tallerArchivadoId}/asistencia/${usuarioId}`, { asistio })
     return data
+}
+
+// ─── Documentos PDF ────────────────────────────────────────────────────────────────────────────
+
+export const getDocumentos = async (tallerId) => {
+    const { data } = await api.get(`/talleres/${tallerId}/documentos`)
+    return data
+}
+
+export const eliminarDocumentoPDF = async (tallerId, docId) => {
+    const { data } = await api.delete(`/talleres/${tallerId}/documentos/${docId}`)
+    return data
+}
+
+export const subirDocumentoPDF = async (tallerId, archivo, onProgress) => {
+    const CHUNK_SIZE = 256 * 1024  // 256 KB de base64 por petición
+
+    const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => {
+            const result = reader.result
+            resolve(result.slice(result.indexOf(',') + 1))
+        }
+        reader.onerror = reject
+        reader.readAsDataURL(archivo)
+    })
+
+    const sessionId = crypto.randomUUID()
+    const chunks = []
+    for (let i = 0; i < base64.length; i += CHUNK_SIZE) {
+        chunks.push(base64.slice(i, i + CHUNK_SIZE))
+    }
+
+    let lastData = null
+    for (let i = 0; i < chunks.length; i++) {
+        const { data } = await api.post(`/talleres/${tallerId}/documentos/chunk`, {
+            sessionId,
+            index:  i,
+            total:  chunks.length,
+            nombre: archivo.name,
+            data:   chunks[i],
+        })
+        lastData = data
+        onProgress?.((i + 1) / chunks.length)
+    }
+    return lastData
 }

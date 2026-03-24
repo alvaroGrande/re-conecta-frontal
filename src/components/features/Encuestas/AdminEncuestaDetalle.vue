@@ -8,6 +8,12 @@
           <p class="text-xs text-blue-700">
             {{ totalRespuestas }} {{ totalRespuestas === 1 ? 'persona ha respondido' : 'personas han respondido' }}
           </p>
+          <p class="text-xs text-blue-600 mt-0.5">
+            Creada por:
+            <span class="font-medium">
+              {{ encuesta.creador ? `${encuesta.creador.nombre} ${encuesta.creador.Apellidos}` : 'Administración' }}
+            </span>
+          </p>
         </div>
         <button
           v-if="encuesta.estado === 'activa'"

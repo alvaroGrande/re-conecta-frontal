@@ -55,6 +55,19 @@
                   class="w-full"
                   size="small"
                 />
+                <!-- Barra de progreso durante la subida -->
+                <div v-if="subiendoFoto" class="w-full mt-1">
+                  <div class="flex justify-between text-xs text-gray-500 mb-1">
+                    <span>Subiendo…</span>
+                    <span>{{ progressoFoto }}%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-1.5 dark:bg-slate-700">
+                    <div
+                      class="bg-blue-500 h-1.5 rounded-full transition-all duration-200"
+                      :style="{ width: progressoFoto + '%' }"
+                    ></div>
+                  </div>
+                </div>
                 <Button
                   v-if="previsualizacion"
                   icon="pi pi-times"
@@ -151,21 +164,21 @@
           </div>
 
           <!-- Estadísticas o información adicional -->
-          <div class="bg-white rounded-lg shadow-md p-6 mt-6">
-            <h2 class="text-lg font-semibold text-gray-900 mb-4">Información de Cuenta</h2>
+          <div class="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 mt-6">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4">Información de Cuenta</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
-                <i class="pi pi-calendar text-2xl text-blue-600"></i>
+              <div class="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <i class="pi pi-calendar text-2xl text-blue-600 dark:text-blue-400"></i>
                 <div>
-                  <p class="text-xs text-gray-600">Miembro desde</p>
-                  <p class="font-semibold text-gray-900">{{ fechaCreacion }}</p>
+                  <p class="text-xs text-gray-600 dark:text-slate-400">Miembro desde</p>
+                  <p class="font-semibold text-gray-900 dark:text-slate-100">{{ fechaCreacion }}</p>
                 </div>
               </div>
-              <div class="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-                <i class="pi pi-shield text-2xl text-green-600"></i>
+              <div class="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                <i class="pi pi-shield text-2xl text-green-600 dark:text-green-400"></i>
                 <div>
-                  <p class="text-xs text-gray-600">Estado de cuenta</p>
-                  <p class="font-semibold text-green-700">Activa</p>
+                  <p class="text-xs text-gray-600 dark:text-slate-400">Estado de cuenta</p>
+                  <p class="font-semibold text-green-700 dark:text-green-400">Activa</p>
                 </div>
               </div>
             </div>
@@ -199,6 +212,7 @@ const archivoSeleccionado = ref(null)
 const previsualizacion = ref(null)
 const guardando = ref(false)
 const subiendoFoto = ref(false)
+const progressoFoto = ref(0)
 
 const iniciales = computed(() => {
   const nombre = usuario.value.nombre?.charAt(0) || ''
@@ -258,9 +272,9 @@ const seleccionarArchivo = (event) => {
   const archivo = event.target.files[0]
   if (!archivo) return
 
-  // Validar tamaño (5MB máximo)
-  if (archivo.size > 5 * 1024 * 1024) {
-    showError('La imagen no debe superar los 5MB')
+  // Validar tamaño (15MB máximo)
+  if (archivo.size > 15 * 1024 * 1024) {
+    showError('La imagen no debe superar los 15MB')
     return
   }
 
@@ -292,8 +306,13 @@ const subirFoto = async () => {
   if (!archivoSeleccionado.value) return
 
   subiendoFoto.value = true
+  progressoFoto.value = 0
   try {
-    const resultado = await subirFotoPerfil(usuario.value.id, archivoSeleccionado.value)
+    const resultado = await subirFotoPerfil(
+      usuario.value.id,
+      archivoSeleccionado.value,
+      (p) => { progressoFoto.value = Math.round(p * 100) }
+    )
     
     // Actualizar usuario local
     usuario.value.foto_perfil = resultado.foto_perfil
@@ -308,6 +327,7 @@ const subirFoto = async () => {
     showError('Error al subir la foto de perfil')
   } finally {
     subiendoFoto.value = false
+    progressoFoto.value = 0
   }
 }
 

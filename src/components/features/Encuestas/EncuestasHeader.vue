@@ -6,8 +6,8 @@
           <h1 class="text-3xl font-bold text-gray-800">Encuestas</h1>
           <p class="text-gray-600 text-sm mt-1">Participa en nuestras encuestas y conoce los resultados</p>
         </div>
-        <div class="flex gap-2 items-center">
-          <Button 
+        <div class="flex flex-wrap gap-2 items-center">
+          <Button
             v-if="esAdmin"
             icon="pi pi-plus"
             label="Nueva encuesta"
@@ -49,14 +49,8 @@
 import Button from 'primevue/button'
 
 defineProps({
-  mostrarActivas: {
-    type: Boolean,
-    required: true
-  },
-  esAdmin: {
-    type: Boolean,
-    default: false
-  }
+  mostrarActivas: { type: Boolean, required: true },
+  esAdmin:        { type: Boolean, default: false }
 })
 
 const emit = defineEmits(['cambiar-filtro', 'crear'])

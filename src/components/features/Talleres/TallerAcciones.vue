@@ -2,11 +2,13 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-  taller:      { type: Object,  required: true },
-  inscrito:    { type: Boolean, default: false },
-  procesando:  { type: Boolean, default: false },
-  esAdmin:     { type: Boolean, default: false },
-  esSupervisor:{ type: Boolean, default: false },
+  taller:       { type: Object,  required: true },
+  inscrito:     { type: Boolean, default: false },
+  procesando:   { type: Boolean, default: false },
+  esAdmin:      { type: Boolean, default: false },
+  esSupervisor: { type: Boolean, default: false },
+  pdfPendiente: { type: Boolean, default: false },
+  pdfNuevo:     { type: Boolean, default: false },
 })
 
 const emit = defineEmits([
@@ -18,6 +20,7 @@ const emit = defineEmits([
   'editar',
   'eliminar',
   'cancelar',
+  'ver-documentos',
 ])
 
 const aforoLleno  = computed(() => (props.taller.inscritos ?? 0) >= props.taller.aforo)
@@ -63,6 +66,23 @@ const claseInscripcion = computed(() => {
         {{ textoInscripcion }}
       </button>
     </span>
+
+    <!-- Documentos PDF (todos los usuarios) -->
+    <button
+      class="px-3 py-1 text-sm rounded border transition-colors flex items-center gap-1 relative"
+      :class="pdfPendiente
+        ? 'border-orange-300 text-orange-500 hover:bg-orange-50 cursor-wait'
+        : pdfNuevo
+          ? 'border-green-400 text-green-600 hover:bg-green-50 cursor-pointer'
+          : 'border-gray-300 text-gray-600 hover:bg-gray-50 cursor-pointer'"
+      :title="pdfPendiente ? 'Los PDFs aún se están subiendo…' : pdfNuevo ? 'Nuevos documentos disponibles' : ''"
+      @click="emit('ver-documentos')"
+    >
+      <i v-if="pdfPendiente" class="pi pi-spin pi-spinner text-xs" />
+      <i v-else class="pi pi-file-pdf" />
+      {{ pdfPendiente ? 'Subiendo…' : 'PDF' }}
+      <span v-if="pdfNuevo" class="absolute -top-1.5 -right-1.5 text-[9px] font-bold bg-green-500 text-white rounded-full px-1 leading-4">NEW</span>
+    </button>
 
     <!-- Ver inscritos (admin / monitor) -->
     <button

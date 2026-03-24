@@ -18,6 +18,7 @@ import router from './router'
 import Button from 'primevue/button';
 import Select from 'primevue/select';
 import { conectarSocket, desconectarSocket } from './services/socketService';
+import { vPermission } from './directives/vPermission.js';
 
 
 const app = createApp(App);
@@ -35,6 +36,7 @@ app.component('Button', Button);
 app.component('Select', Select);
 app.component("Toast", Toast);
 app.directive('tooltip', Tooltip);
+app.directive('permission', vPermission);
 app.use(router)
 app.use(i18n)
 app.use(ToastService)

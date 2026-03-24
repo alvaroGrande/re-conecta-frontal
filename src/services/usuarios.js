@@ -40,21 +40,44 @@ export const eliminarUsuario = async (id) => {
 }
 
 /**
- * Subir foto de perfil de un usuario
+/**
+ * Subir foto de perfil por chunks para evitar límites de payload.
  * @param {string} usuarioId - ID del usuario
  * @param {File} archivo - Archivo de imagen
+ * @param {(progress: number) => void} [onProgress] - Callback con progreso 0-1
  */
-export const subirFotoPerfil = async (usuarioId, archivo) => {
-  // Convertir archivo a base64
-  const base64 = await new Promise((resolve, reject) => {
+export const subirFotoPerfil = async (usuarioId, archivo, onProgress) => {
+  const CHUNK_SIZE = 64 * 1024 // 64 KB de base64 por petición
+
+  const base64DataUrl = await new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = () => resolve(reader.result)
     reader.onerror = reject
     reader.readAsDataURL(archivo)
   })
-  
-  const { data } = await api.post(`/usuarios/${usuarioId}/foto`, {
-    foto: base64
-  })
-  return data
+
+  const commaIdx = base64DataUrl.indexOf(',')
+  const header   = base64DataUrl.slice(0, commaIdx)       // "data:image/jpeg;base64"
+  const base64   = base64DataUrl.slice(commaIdx + 1)      // datos puros
+  const mimeType = header.match(/:(.*?);/)[1]
+
+  const sessionId = crypto.randomUUID()
+  const chunks = []
+  for (let i = 0; i < base64.length; i += CHUNK_SIZE) {
+    chunks.push(base64.slice(i, i + CHUNK_SIZE))
+  }
+
+  let lastData = null
+  for (let i = 0; i < chunks.length; i++) {
+    const { data } = await api.post(`/usuarios/${usuarioId}/foto/chunk`, {
+      sessionId,
+      index: i,
+      total: chunks.length,
+      mimeType,
+      data: chunks[i]
+    })
+    lastData = data
+    onProgress?.((i + 1) / chunks.length)
+  }
+  return lastData
 }

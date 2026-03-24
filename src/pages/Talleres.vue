@@ -19,10 +19,12 @@ import TalleresTabla from '@features/Talleres/TalleresTabla.vue'
 import NuevoTallerForm from '@features/Talleres/NuevoTallerForm.vue'
 import InscritosModal from '@features/Talleres/InscritosModal.vue'
 import GestionMonitorModal from '@features/Talleres/GestionMonitorModal.vue'
+import TallerDocumentos from '@features/Talleres/TallerDocumentos.vue'
 import Dialog from 'primevue/dialog'
 import ConfirmDialog from 'primevue/confirmdialog'
 import Select from 'primevue/select'
 import Textarea from 'primevue/textarea'
+import Paginator from 'primevue/paginator'
 import { useConfirm } from 'primevue/useconfirm'
 
 const confirm = useConfirm()
@@ -34,6 +36,12 @@ const talleres = ref([])
 const misInscripciones = ref(new Set())
 const procesando = ref(new Set())
 
+// Paginación
+const paginaActual  = ref(1)
+const limitPagina   = ref(50)
+const totalTalleres = ref(0)
+const cargando      = ref(false)
+
 const modalCrear   = ref(false)
 const modalEditar  = ref(false)
 const tallerEditando = ref(null)
@@ -43,6 +51,19 @@ const tallerInscritos = ref(null)
 
 const modalMonitor  = ref(false)
 const tallerMonitor = ref(null)
+
+const modalDocumentos    = ref(false)
+const tallerDocumentos   = ref(null)
+const pdfsEnCurso        = ref(new Set())
+const pdfsNuevos         = ref(new Set())
+function onPdfsSubiendo(id) { pdfsEnCurso.value = new Set([...pdfsEnCurso.value, id]) }
+function onPdfsListos(id) {
+  const s = new Set(pdfsEnCurso.value); s.delete(id); pdfsEnCurso.value = s
+  pdfsNuevos.value = new Set([...pdfsNuevos.value, id])
+  setTimeout(() => {
+    const n = new Set(pdfsNuevos.value); n.delete(id); pdfsNuevos.value = n
+  }, 8000)
+}
 
 const modalCancelar    = ref(false)
 const tallerACancelar  = ref(null)
@@ -64,18 +85,30 @@ async function cargarMotivos() {
 onMounted(cargarTalleres)
 
 async function cargarTalleres() {
-  talleres.value = await getTalleres()
+  cargando.value = true
+  try {
+    const res = await getTalleres({ page: paginaActual.value, limit: limitPagina.value })
+    talleres.value  = res.data
+    totalTalleres.value = res.total
 
-  if (usuario.value?.id) {
-    const checks = await Promise.allSettled(
-      talleres.value.map(t => getMiInscripcion(t.id))
-    )
-    const ids = new Set()
-    checks.forEach((r, idx) => {
-      if (r.status === 'fulfilled' && r.value?.inscrito) ids.add(talleres.value[idx].id)
-    })
-    misInscripciones.value = ids
+    if (usuario.value?.id) {
+      const checks = await Promise.allSettled(
+        talleres.value.map(t => getMiInscripcion(t.id))
+      )
+      const ids = new Set()
+      checks.forEach((r, idx) => {
+        if (r.status === 'fulfilled' && r.value?.inscrito) ids.add(talleres.value[idx].id)
+      })
+      misInscripciones.value = ids
+    }
+  } finally {
+    cargando.value = false
   }
+}
+
+async function onPage(event) {
+  paginaActual.value = event.page + 1
+  await cargarTalleres()
 }
 
 async function toggleInscripcion(taller) {
@@ -206,6 +239,11 @@ function gestionarMonitor(taller) {
   tallerMonitor.value = taller
   modalMonitor.value = true
 }
+
+function verDocumentos(taller) {
+  tallerDocumentos.value = taller
+  modalDocumentos.value  = true
+}
 </script>
 
 <template>
@@ -224,6 +262,8 @@ function gestionarMonitor(taller) {
       :procesando="procesando"
       :es-admin="esAdmin"
       :es-supervisor="esSupervisor"
+      :pdfs-en-curso="pdfsEnCurso"
+      :pdfs-nuevos="pdfsNuevos"
       @toggle-inscripcion="toggleInscripcion"
       @ver-inscritos="verInscritos"
       @gestionar="gestionarMonitor"
@@ -232,16 +272,31 @@ function gestionarMonitor(taller) {
       @editar="abrirEditar"
       @eliminar="confirmarEliminar"
       @cancelar="confirmarCancelar"
+      @ver-documentos="verDocumentos"
+    />
+
+    <Paginator
+      v-if="totalTalleres > limitPagina"
+      :rows="limitPagina"
+      :totalRecords="totalTalleres"
+      :first="(paginaActual - 1) * limitPagina"
+      :rowsPerPageOptions="[25, 50, 100]"
+      @page="onPage"
+      class="mt-4"
     />
   </div>
 
   <!-- Modal Crear -->
-  <Dialog header="Nuevo Taller" v-model:visible="modalCrear" :modal="true" :closable="true" :style="{ width: '500px' }">
-    <NuevoTallerForm @taller-creado="alTallerCreado" />
+  <Dialog header="Nuevo Taller" v-model:visible="modalCrear" :modal="true" :closable="true" :style="{ width: '95%', maxWidth: '560px' }">
+    <NuevoTallerForm
+      @taller-creado="alTallerCreado"
+      @pdfs-subiendo="onPdfsSubiendo"
+      @pdfs-listos="onPdfsListos"
+    />
   </Dialog>
 
   <!-- Modal Editar -->
-  <Dialog header="Editar Taller" v-model:visible="modalEditar" :modal="true" :closable="true" :style="{ width: '500px' }">
+  <Dialog header="Editar Taller" v-model:visible="modalEditar" :modal="true" :closable="true" :style="{ width: '95%', maxWidth: '560px' }">
     <NuevoTallerForm :taller="tallerEditando" @taller-editado="alTallerEditado" />
   </Dialog>
 
@@ -250,6 +305,14 @@ function gestionarMonitor(taller) {
 
   <!-- Modal gestión monitor -->
   <GestionMonitorModal v-model:visible="modalMonitor" :taller="tallerMonitor" />
+
+  <!-- Modal documentos PDF -->
+  <TallerDocumentos
+    v-model:visible="modalDocumentos"
+    :taller="tallerDocumentos"
+    :es-admin="esAdmin"
+    :es-supervisor="esSupervisor"
+  />
 
   <!-- Dialog cancelar taller (con motivo) -->
   <Dialog

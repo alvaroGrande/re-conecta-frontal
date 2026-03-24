@@ -4,7 +4,7 @@
       <div class="flex flex-col md:flex-row justify-between items-center gap-4">
         <!-- Información de la app -->
         <div class="text-center md:text-left">
-          <h3 class="text-white font-semibold text-lg">reConecta</h3>
+          <p class="text-white font-semibold text-lg">reConecta</p>
           <p class="text-gray-400 text-sm">{{ $t('footer.platform') }}</p>
           <p class="text-gray-500 text-xs mt-1">v{{ version }}</p>
         </div>

@@ -3,15 +3,15 @@
     <div class="max-w-6xl mx-auto px-4 flex justify-between items-center h-16">
       <!-- Logo -->
       <h1 class="text-xl font-bold">
-        <RouterLink to="/">
-          <img :src="logo" alt="Re-Conecta Logo" class="h-8" />
+        <RouterLink to="/" aria-label="Re-Conecta — Ir a inicio">
+          <img :src="logo" alt="" class="h-8" />
         </RouterLink>
       </h1>
 
       <!-- Menú de escritorio - Solo visible si hay sesión -->
-      <nav v-if="isAuthenticated" class="hidden md:flex space-x-6 items-center">
+      <nav v-if="isAuthenticated" class="hidden md:flex space-x-6 items-center" aria-label="Navegación principal">
         <RouterLink v-if="esAdmin" to="/dashboard" class="hover:text-accent flex items-center gap-1">
-          <i class="pi pi-chart-bar"></i>
+          <i class="pi pi-chart-bar" aria-hidden="true"></i>
           {{ $t('nav.dashboard') }}
         </RouterLink>
         <RouterLink to="/about" class="hover:text-accent">Nosotros</RouterLink>
@@ -23,8 +23,11 @@
           {{ $t('nav.calendar') }}
         </RouterLink>
         <RouterLink v-if="esAdmin" to="/usuarios" class="hover:text-accent">{{ $t('nav.users') }}</RouterLink>
-        <RouterLink to="/perfil" class="hover:text-accent">
-          <i class="pi pi-user text-white"></i>
+        <RouterLink v-if="esAdmin" to="/roles-permisos" class="hover:text-accent flex items-center gap-1" aria-label="Roles y Permisos" title="Roles y Permisos">
+          <i class="pi pi-shield" aria-hidden="true"></i>
+        </RouterLink>
+        <RouterLink to="/perfil" class="hover:text-accent" aria-label="Mi perfil" title="Mi perfil">
+          <i class="pi pi-user text-white" aria-hidden="true"></i>
         </RouterLink>
         
         <!-- Panel de notificaciones -->
@@ -37,7 +40,7 @@
           :aria-label="isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
           :title="isDark ? 'Modo claro' : 'Modo oscuro'"
         >
-          <i :class="isDark ? 'pi pi-sun' : 'pi pi-moon'"></i>
+          <i :class="isDark ? 'pi pi-sun' : 'pi pi-moon'" aria-hidden="true"></i>
         </button>
 
         <!-- Botón de cerrar sesión -->
@@ -45,13 +48,13 @@
           @click="handleLogout"
           class="hover:text-accent flex items-center gap-1"
         >
-          <i class="pi pi-sign-out"></i>
+          <i class="pi pi-sign-out" aria-hidden="true"></i>
           {{ $t('app.logout') }}
         </button>
       </nav>
 
       <!-- Icono hamburguesa móvil - Solo visible si hay sesión -->
-      <button v-if="isAuthenticated" @click="isOpen = !isOpen" class="md:hidden focus:outline-none">
+      <button v-if="isAuthenticated" @click="isOpen = !isOpen" class="md:hidden focus:outline-none" :aria-label="isOpen ? 'Cerrar menú' : 'Abrir menú'" :aria-expanded="isOpen">
         <svg
           class="w-6 h-6"
           fill="none"
@@ -78,38 +81,44 @@
     </div>
 
     <!-- Menú móvil desplegable - Solo visible si hay sesión -->
-    <nav v-if="isOpen && isAuthenticated" class="md:hidden bg-primary px-4 pb-4">
+    <nav v-if="isOpen && isAuthenticated" class="md:hidden bg-primary px-4 pb-4" aria-label="Menú móvil">
       <ul class="flex flex-col space-y-2">
         <li><RouterLink @click="isOpen=false" to="/" class="hover:text-gray-200">Inicio</RouterLink></li>
         <li v-if="esAdmin">
 <RouterLink @click="isOpen=false" to="/dashboard" class="hover:text-gray-200 flex items-center gap-2">
-          <i class="pi pi-chart-bar"></i>
+          <i class="pi pi-chart-bar" aria-hidden="true"></i>
           Dashboard
         </RouterLink>
 </li>
         <li><RouterLink @click="isOpen=false" to="/about" class="hover:text-gray-200">Nosotros</RouterLink></li>
         <li>
 <RouterLink @click="isOpen=false" to="/encuestas" class="hover:text-gray-200 flex items-center gap-2">
-          <i class="pi pi-chart-line"></i>
+          <i class="pi pi-chart-line" aria-hidden="true"></i>
           {{ $t('nav.surveys') }}
         </RouterLink>
 </li>
         <li><RouterLink @click="isOpen=false" to="/contact" class="hover:text-gray-200">Contacto</RouterLink></li>
         <li>
 <RouterLink @click="isOpen=false" to="/calendario" class="hover:text-gray-200 flex items-center gap-2">
-          <i class="pi pi-calendar"></i>
+          <i class="pi pi-calendar" aria-hidden="true"></i>
           {{ $t('nav.calendar') }}
         </RouterLink>
 </li>
         <li v-if="esAdmin">
 <RouterLink @click="isOpen=false" to="/usuarios" class="hover:text-gray-200 flex items-center gap-2">
-          <i class="pi pi-users"></i>
+          <i class="pi pi-users" aria-hidden="true"></i>
           {{ $t('nav.users') }}
+        </RouterLink>
+</li>
+        <li v-if="esAdmin">
+<RouterLink @click="isOpen=false" to="/roles-permisos" class="hover:text-gray-200 flex items-center gap-2">
+          <i class="pi pi-shield" aria-hidden="true"></i>
+          Roles y Permisos
         </RouterLink>
 </li>
         <li>
 <RouterLink @click="isOpen=false" to="/perfil" class="hover:text-gray-200 flex items-center gap-2">
-          <i class="pi pi-user"></i>
+          <i class="pi pi-user" aria-hidden="true"></i>
           Mi Perfil
         </RouterLink>
 </li>
@@ -119,13 +128,13 @@
             class="hover:text-gray-200 flex items-center gap-2"
             :aria-label="isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
           >
-            <i :class="isDark ? 'pi pi-sun' : 'pi pi-moon'"></i>
+            <i :class="isDark ? 'pi pi-sun' : 'pi pi-moon'" aria-hidden="true"></i>
             {{ isDark ? 'Modo claro' : 'Modo oscuro' }}
           </button>
         </li>
         <li>
           <button @click="handleLogout" class="hover:text-gray-200 flex items-center gap-2">
-            <i class="pi pi-sign-out"></i>
+            <i class="pi pi-sign-out" aria-hidden="true"></i>
             Cerrar Sesión
           </button>
         </li>

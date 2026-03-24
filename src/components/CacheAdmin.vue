@@ -1,9 +1,9 @@
 <template>
-  <div class="bg-white rounded-lg shadow p-6">
+  <div class="bg-white dark:bg-slate-800 rounded-lg shadow p-6">
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h3 class="text-lg font-semibold text-gray-900">Administración de Caché</h3>
-        <p class="text-sm text-gray-500 mt-1">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-slate-100">Administración de Caché</h3>
+        <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">
           Gestiona las entradas de caché en memoria
         </p>
       </div>
@@ -11,7 +11,7 @@
         <button
           @click="cargarDetalles"
           :disabled="cargando"
-          class="px-3 py-2 text-sm bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          class="px-3 py-2 text-sm bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <ArrowPathIcon class="w-4 h-4 inline mr-1" :class="{ 'animate-spin': cargando }" />
           Actualizar
@@ -19,7 +19,7 @@
         <button
           @click="limpiarTodo"
           :disabled="cargando || !entries.length"
-          class="px-3 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          class="px-3 py-2 text-sm bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <TrashIcon class="w-4 h-4 inline mr-1" />
           Limpiar Todo
@@ -29,72 +29,72 @@
 
     <!-- Resumen -->
     <div v-if="summary" class="grid grid-cols-3 gap-4 mb-6">
-      <div class="bg-blue-50 rounded-lg p-4">
-        <p class="text-sm text-gray-600">Total Entradas</p>
-        <p class="text-2xl font-bold text-blue-600">{{ summary.totalEntries }}</p>
+      <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
+        <p class="text-sm text-gray-600 dark:text-slate-400">Total Entradas</p>
+        <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ summary.totalEntries }}</p>
       </div>
-      <div class="bg-green-50 rounded-lg p-4">
-        <p class="text-sm text-gray-600">Tamaño Total</p>
-        <p class="text-2xl font-bold text-green-600">{{ summary.totalSize }}</p>
+      <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
+        <p class="text-sm text-gray-600 dark:text-slate-400">Tamaño Total</p>
+        <p class="text-2xl font-bold text-green-600 dark:text-green-400">{{ summary.totalSize }}</p>
       </div>
-      <div class="bg-purple-50 rounded-lg p-4">
-        <p class="text-sm text-gray-600">TTL</p>
-        <p class="text-2xl font-bold text-purple-600">5 minutos</p>
+      <div class="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-4">
+        <p class="text-sm text-gray-600 dark:text-slate-400">TTL</p>
+        <p class="text-2xl font-bold text-purple-600 dark:text-purple-400">5 minutos</p>
       </div>
     </div>
 
     <!-- Mensaje cuando no hay datos -->
     <div v-if="!cargando && entries.length === 0" class="text-center py-12">
-      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
       </svg>
-      <h3 class="mt-2 text-sm font-medium text-gray-900">No hay entradas en caché</h3>
-      <p class="mt-1 text-sm text-gray-500">El caché está vacío o las entradas han expirado.</p>
+      <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-slate-100">No hay entradas en caché</h3>
+      <p class="mt-1 text-sm text-gray-500 dark:text-slate-400">El caché está vacío o las entradas han expirado.</p>
     </div>
 
     <!-- Tabla de entradas -->
     <div v-else class="overflow-x-auto">
-      <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+        <thead class="bg-gray-50 dark:bg-slate-700/50">
           <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">
               Clave
             </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">
               Tamaño
             </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">
               Expira en
             </th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">
               Fecha de Expiración
             </th>
-            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">
               Acciones
             </th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-for="entry in entriesVisibles" :key="entry.key" class="hover:bg-gray-50">
+        <tbody class="bg-white dark:bg-slate-800 divide-y divide-gray-200 dark:divide-slate-700">
+          <tr v-for="entry in entriesVisibles" :key="entry.key" class="hover:bg-gray-50 dark:hover:bg-slate-700/40">
             <td class="px-6 py-4 whitespace-nowrap">
-              <div class="text-sm font-medium text-gray-900">{{ entry.key }}</div>
+              <div class="text-sm font-medium text-gray-900 dark:text-slate-100">{{ entry.key }}</div>
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
-              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">
                 {{ entry.size }}
               </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
               {{ formatearTiempoRestante(entry.expiresIn) }}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
               {{ formatearFecha(entry.expiresAt) }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
               <div class="flex gap-2 justify-end">
                 <button
                   @click="verDatos(entry.key)"
-                  class="px-3 py-1.5 text-sm bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors"
+                  class="px-3 py-1.5 text-sm bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
                 >
                   <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -105,7 +105,7 @@
                 <button
                   @click="eliminarEntrada(entry.key)"
                   :disabled="eliminando === entry.key"
-                  class="px-3 py-1.5 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  class="px-3 py-1.5 text-sm bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <TrashIcon class="w-4 h-4 inline mr-1" :class="{ 'animate-pulse': eliminando === entry.key }" />
                   Eliminar
@@ -129,18 +129,18 @@
       </div>
       <div v-else-if="datosCacheados" class="max-h-96 overflow-y-auto">
         <div class="mb-3 flex justify-between items-center">
-          <span class="text-sm font-semibold text-gray-700">Clave: {{ claveSeleccionada }}</span>
+          <span class="text-sm font-semibold text-gray-700 dark:text-slate-300">Clave: {{ claveSeleccionada }}</span>
           <button
             @click="copiarAlPortapapeles"
-            class="px-2 py-1 text-xs bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
+            class="px-2 py-1 text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300 rounded hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
           >
             <i class="pi pi-copy mr-1"></i>
             Copiar JSON
           </button>
         </div>
-        <pre class="bg-gray-50 rounded-lg p-4 text-sm overflow-x-auto border border-gray-200"><code>{{ formatearJSON(datosCacheados) }}</code></pre>
+        <pre class="bg-gray-50 dark:bg-slate-900 rounded-lg p-4 text-sm overflow-x-auto border border-gray-200 dark:border-slate-700 text-gray-800 dark:text-slate-300"><code>{{ formatearJSON(datosCacheados) }}</code></pre>
       </div>
-      <div v-else class="text-center py-8 text-gray-500">
+      <div v-else class="text-center py-8 text-gray-500 dark:text-slate-400">
         No se pudieron cargar los datos
       </div>
       <template #footer>
@@ -158,7 +158,7 @@
       :style="{ width: '450px' }"
     >
       <p class="mb-4">¿Está seguro de eliminar la entrada <strong>{{ entradaAEliminar }}</strong> del caché?</p>
-      <p class="text-sm text-gray-600">La siguiente petición a este endpoint consultará la base de datos.</p>
+      <p class="text-sm text-gray-600 dark:text-slate-400">La siguiente petición a este endpoint consultará la base de datos.</p>
       <template #footer>
         <div class="flex gap-2 justify-end">
           <Button label="Cancelar" severity="secondary" @click="mostrarDialogoEliminar = false" />
@@ -175,7 +175,7 @@
       :style="{ width: '450px' }"
     >
       <p class="mb-4">¿Está seguro de limpiar <strong>TODO el caché</strong>?</p>
-      <p class="text-sm text-gray-600">Esta acción no se puede deshacer y todas las peticiones consultarán la base de datos hasta que se vuelva a llenar el caché.</p>
+      <p class="text-sm text-gray-600 dark:text-slate-400">Esta acción no se puede deshacer y todas las peticiones consultarán la base de datos hasta que se vuelva a llenar el caché.</p>
       <template #footer>
         <div class="flex gap-2 justify-end">
           <Button label="Cancelar" severity="secondary" @click="mostrarDialogoLimpiar = false" />
@@ -191,18 +191,18 @@
           <div class="flex items-start gap-3">
             <i class="pi pi-exclamation-triangle text-yellow-500 text-2xl"></i>
             <div class="flex-1">
-              <p class="font-semibold text-gray-900">{{ slotProps.message.summary }}</p>
-              <p class="text-sm text-gray-600">La entrada se eliminará en {{ tiempoRestante }} segundos</p>
+              <p class="font-semibold text-gray-900 dark:text-slate-100">{{ slotProps.message.summary }}</p>
+              <p class="text-sm text-gray-600 dark:text-slate-400">La entrada se eliminará en {{ tiempoRestante }} segundos</p>
             </div>
           </div>
           <div class="flex items-center gap-3">
-            <div class="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
+            <div class="flex-1 bg-gray-200 dark:bg-slate-600 rounded-full h-2 overflow-hidden">
               <div 
                 class="bg-yellow-500 h-full transition-all duration-1000 ease-linear"
                 :style="{ width: `${(tiempoRestante / 10) * 100}%` }"
               ></div>
             </div>
-            <span class="text-sm font-medium text-gray-700">{{ tiempoRestante }}s</span>
+            <span class="text-sm font-medium text-gray-700 dark:text-slate-300">{{ tiempoRestante }}s</span>
           </div>
           <Button 
             label="Cancelar" 

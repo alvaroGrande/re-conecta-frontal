@@ -1,14 +1,13 @@
 import api from './api'
 
-export const obtenerEncuestas = async (filtros = {}) => {
+export const obtenerEncuestas = async (filtros = {}, signal) => {
   try {
     const params = new URLSearchParams()
-    if (filtros.estado) {
-      params.append('estado', filtros.estado)
-    }
-    
+    if (filtros.estado) params.append('estado', filtros.estado)
+    if (filtros.q)      params.append('q', filtros.q)
+
     const url = `/encuestas${params.toString() ? '?' + params.toString() : ''}`
-    const response = await api.get(url)
+    const response = await api.get(url, signal ? { signal } : undefined)
     return response.data
   } catch (error) {
     console.error('Error al obtener encuestas:', error)

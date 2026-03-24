@@ -158,21 +158,21 @@
           <div class="space-y-0.5 text-xs text-gray-600 dark:text-slate-400">
             <div class="flex justify-between items-center">
               <span>Total:</span>
-              <span class="font-bold text-blue-600">{{ formulario.preguntas.length }}</span>
+              <span class="font-bold text-blue-600 dark:text-blue-400">{{ formulario.preguntas.length }}</span>
             </div>
             <div class="flex justify-between items-center">
               <span class="flex items-center gap-1">
                 <span class="w-1.5 h-1.5 bg-purple-500 rounded-full"></span>
                 Múltiple:
               </span>
-              <span class="font-semibold text-purple-600">{{ preguntasMultiple }}</span>
+              <span class="font-semibold text-purple-600 dark:text-purple-400">{{ preguntasMultiple }}</span>
             </div>
             <div class="flex justify-between items-center">
               <span class="flex items-center gap-1">
                 <span class="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
                 Abiertas:
               </span>
-              <span class="font-semibold text-orange-600">{{ preguntasAbiertas }}</span>
+              <span class="font-semibold text-orange-600 dark:text-orange-400">{{ preguntasAbiertas }}</span>
             </div>
           </div>
         </div>
@@ -185,18 +185,44 @@
             </svg>
             Dirigida a
           </h4>
-          <Select 
-            v-model="formulario.rol_objetivo"
-            :options="rolesObjetivo"
-            option-label="label"
-            option-value="value"
-            placeholder="Todos"
-            class="w-full"
-            size="small"
-          />
+
+          <!-- Admin: selector de rol -->
+          <template v-if="!esCoordinador">
+            <Select
+              v-model="formulario.rol_objetivo"
+              :options="rolesObjetivo"
+              option-label="label"
+              option-value="value"
+              placeholder="Todos"
+              class="w-full"
+              size="small"
+            />
+          </template>
+
+          <!-- Coordinador: lista de sus usuarios con todos seleccionados -->
+          <template v-else>
+            <MultiSelect
+              v-model="formulario.usuarios_destino"
+              :options="usuariosCoordinados"
+              option-label="nombre"
+              option-value="id"
+              placeholder="Selecciona usuarios"
+              :max-selected-labels="2"
+              selected-items-label="{0} usuarios seleccionados"
+              class="w-full"
+              size="small"
+            >
+              <template #option="{ option }">
+                <span>{{ option.nombre }} {{ option.Apellidos }}</span>
+              </template>
+            </MultiSelect>
+            <p v-if="formulario.usuarios_destino.length === 0" class="text-[10px] text-red-500 mt-0.5">Selecciona al menos un usuario</p>
+            <p v-else class="text-[10px] text-gray-400 dark:text-slate-500 mt-0.5">{{ formulario.usuarios_destino.length }} de {{ usuariosCoordinados.length }} usuarios</p>
+          </template>
+
           <div class="mt-1">
             <label class="block text-xs font-medium text-gray-700 dark:text-slate-300 mb-0.5">Máx. opciones</label>
-            <InputNumber 
+            <InputNumber
               v-model="MAX_RESPUESTAS_MULTIPLE"
               class="w-full"
               :min="2"
@@ -215,32 +241,23 @@
             Notificar a
           </h4>
           <div class="flex flex-col gap-1">
+            <!-- Admin: los tres roles -->
+            <template v-if="!esCoordinador">
+              <div class="flex items-center gap-2">
+                <input type="checkbox" id="notif-admin" v-model="formulario.notificar_admins" class="rounded text-purple-600 focus:ring-purple-500" />
+                <label for="notif-admin" class="text-xs text-gray-700 dark:text-slate-300 cursor-pointer">Administradores</label>
+              </div>
+              <div class="flex items-center gap-2">
+                <input type="checkbox" id="notif-coord" v-model="formulario.notificar_coordinadores" class="rounded text-purple-600 focus:ring-purple-500" />
+                <label for="notif-coord" class="text-xs text-gray-700 dark:text-slate-300 cursor-pointer">Coordinadores</label>
+              </div>
+            </template>
+            <!-- Coordinador: solo puede notificar a los usuarios seleccionados -->
             <div class="flex items-center gap-2">
-              <input 
-                type="checkbox" 
-                id="notif-admin" 
-                v-model="formulario.notificar_admins"
-                class="rounded text-purple-600 focus:ring-purple-500"
-              />
-              <label for="notif-admin" class="text-xs text-gray-700 dark:text-slate-300 cursor-pointer">Administradores</label>
-            </div>
-            <div class="flex items-center gap-2">
-              <input 
-                type="checkbox" 
-                id="notif-coord" 
-                v-model="formulario.notificar_coordinadores"
-                class="rounded text-purple-600 focus:ring-purple-500"
-              />
-              <label for="notif-coord" class="text-xs text-gray-700 dark:text-slate-300 cursor-pointer">Coordinadores</label>
-            </div>
-            <div class="flex items-center gap-2">
-              <input 
-                type="checkbox" 
-                id="notif-users" 
-                v-model="formulario.notificar_usuarios"
-                class="rounded text-purple-600 focus:ring-purple-500"
-              />
-              <label for="notif-users" class="text-xs text-gray-700 dark:text-slate-300 cursor-pointer">Usuarios</label>
+              <input type="checkbox" id="notif-users" v-model="formulario.notificar_usuarios" class="rounded text-purple-600 focus:ring-purple-500" />
+              <label for="notif-users" class="text-xs text-gray-700 dark:text-slate-300 cursor-pointer">
+                {{ esCoordinador ? 'Usuarios seleccionados' : 'Usuarios' }}
+              </label>
             </div>
           </div>
         </div>
@@ -269,13 +286,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import Textarea from 'primevue/textarea'
 import DatePicker from 'primevue/datepicker'
 import Button from 'primevue/button'
 import Select from 'primevue/select'
+import MultiSelect from 'primevue/multiselect'
 
 import { showSuccess, showError } from '@services/toastService'
 
@@ -283,6 +301,14 @@ const props = defineProps({
   cargando: {
     type: Boolean,
     default: false
+  },
+  esCoordinador: {
+    type: Boolean,
+    default: false
+  },
+  usuariosCoordinados: {
+    type: Array,
+    default: () => []
   }
 })
 
@@ -306,23 +332,35 @@ const formulario = ref({
   descripcion: '',
   fecha_fin: new Date(),
   rol_objetivo: null,
+  usuarios_destino: [],
   notificar_admins: true,
   notificar_coordinadores: true,
   notificar_usuarios: true,
   preguntas: []
 })
 
+// Al abrir con usuariosCoordinados cargados, pre-seleccionar todos
+watch(() => props.usuariosCoordinados, (lista) => {
+  if (props.esCoordinador && lista.length) {
+    formulario.value.usuarios_destino = lista.map(u => u.id)
+    formulario.value.notificar_usuarios = true
+  }
+}, { immediate: true })
+
 const formularioValido = computed(() => {
-  return (
+  const base =
     formulario.value.titulo.trim() !== '' &&
     formulario.value.descripcion.trim() !== '' &&
     formulario.value.fecha_fin !== null &&
     formulario.value.preguntas.length > 0 &&
-    formulario.value.preguntas.every(p => 
-      p.texto.trim() !== '' && 
+    formulario.value.preguntas.every(p =>
+      p.texto.trim() !== '' &&
       (p.tipo === 'abierta' || (p.opciones && p.opciones.length > 0 && p.opciones.every(o => o.texto.trim() !== '')))
     )
-  )
+  if (props.esCoordinador) {
+    return base && formulario.value.usuarios_destino.length > 0
+  }
+  return base
 })
 
 const preguntasMultiple = computed(() => 

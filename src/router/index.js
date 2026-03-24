@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { PERMISOS_POR_ROL } from '@/config/permissions.js'
 
 // Lazy loading para mejor performance
 const Home = () => import('@pages/Home.vue')
@@ -16,24 +17,28 @@ const TalleresArchivados = () => import('@pages/TalleresArchivados.vue')
 const Encuestas = () => import('@pages/Encuestas.vue')
 const Calendario = () => import('@pages/Calendario.vue')
 const NotFound = () => import('@pages/NotFound.vue')
+const RolesPermisos = () => import('@pages/RolesPermisos.vue')
 
-const ROL_ADMIN = 1
-
+/**
+ * meta.permission: permiso requerido para acceder a la ruta (ej: 'dashboard:ver').
+ * Reemplaza meta.requiresAdmin — compatible hacia atrás durante la migración.
+ */
 const routes = [
   { path: '/', component: Home, name: 'Home' },
   { path: '/login', component: Login, name: 'Login' },
-  { path: '/dashboard', component: Dashboard, name: 'Dashboard', meta: { requiresAdmin: true } },
-  { path: '/usuario/:id', component: PerfilUsuario, name: 'PerfilUsuario' },
+  { path: '/dashboard', component: Dashboard, name: 'Dashboard', meta: { permission: 'dashboard:ver' } },
+  { path: '/usuario/:id', component: PerfilUsuario, name: 'PerfilUsuario', meta: { permission: 'usuarios:ver_detalle' } },
   { path: '/about', component: About, name: 'About' },
   { path: '/services', component: Services, name: 'Services' },
   { path: '/contact', component: Contact, name: 'Contact' },
-  { path: '/perfil', component: Perfil, name: 'Perfil' },
-  { path: '/talleres', component: Talleres, name: 'Talleres' },
-  { path: '/talleres/archivados', component: TalleresArchivados, name: 'TalleresArchivados', meta: { requiresAdmin: true } },
-  { path: '/encuestas/:id?', component: Encuestas, name: 'Encuestas' },
-  { path: '/calendario', component: Calendario, name: 'Calendario' },
-  { path: '/videollamada', component: VideoCall, name: 'Videollamadas' },
-  { path: '/usuarios', component: Usuarios, name: 'Usuarios' },
+  { path: '/perfil', component: Perfil, name: 'Perfil', meta: { permission: 'perfil:ver' } },
+  { path: '/talleres', component: Talleres, name: 'Talleres', meta: { permission: 'talleres:ver' } },
+  { path: '/talleres/archivados', component: TalleresArchivados, name: 'TalleresArchivados', meta: { permission: 'talleres_archivados:ver' } },
+  { path: '/encuestas/:id?', component: Encuestas, name: 'Encuestas', meta: { permission: 'encuestas:ver' } },
+  { path: '/calendario', component: Calendario, name: 'Calendario', meta: { permission: 'calendario:ver' } },
+  { path: '/videollamada', component: VideoCall, name: 'Videollamadas', meta: { permission: 'videollamadas:ver' } },
+  { path: '/usuarios', component: Usuarios, name: 'Usuarios', meta: { permission: 'usuarios:ver' } },
+  { path: '/roles-permisos', component: RolesPermisos, name: 'RolesPermisos', meta: { permission: 'roles:gestionar' } },
   // Ruta catch-all para 404 - debe estar al final
   { path: '/:pathMatch(.*)*', component: NotFound, name: 'NotFound' }
 ]
@@ -54,7 +59,7 @@ function getUsuario() {
   }
 }
 
-// Guard de autenticación
+// Guard de autenticación y permisos
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
   const isPublicRoute = publicRoutes.has(to.name)
@@ -62,9 +67,11 @@ router.beforeEach((to, from, next) => {
   // Si no hay token y la ruta no es pública, redirigir al login
   if (!token && !isPublicRoute) {
     next({ name: 'Login', query: { redirect: to.fullPath } })
+    return
   }
+
   // Si hay token y va al login, redirigir al home o a la ruta guardada
-  else if (token && to.name === 'Login') {
+  if (token && to.name === 'Login') {
     const redirect = to.query.redirect
     // Validar que el redirect sea una ruta interna (evitar open redirect)
     if (redirect && typeof redirect === 'string' && redirect.startsWith('/') && !redirect.startsWith('//')) {
@@ -72,14 +79,20 @@ router.beforeEach((to, from, next) => {
     } else {
       next({ name: 'Home' })
     }
+    return
   }
-  // Verificar si la ruta requiere permisos de admin
-  else if (to.meta.requiresAdmin && getUsuario().rol !== ROL_ADMIN) {
-    next({ name: 'Home' })
+
+  // Verificar permiso requerido por la ruta
+  if (to.meta.permission) {
+    const usuario = getUsuario()
+    const permisos = new Set(PERMISOS_POR_ROL[usuario.rol] ?? [])
+    if (!permisos.has(to.meta.permission)) {
+      next({ name: 'Home' })
+      return
+    }
   }
-  else {
-    next()
-  }
+
+  next()
 })
 
 export default router

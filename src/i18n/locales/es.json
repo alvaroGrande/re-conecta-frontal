@@ -74,7 +74,7 @@
       "select": "Seleccionar Foto",
       "save": "Guardar Foto",
       "cancel": "Cancelar",
-      "format": "JPG, PNG o GIF. Máximo 5MB",
+      "format": "JPG, PNG o GIF. Máximo 15MB",
       "preview": "Vista previa"
     },
     "personalInfo": {

@@ -9,6 +9,8 @@ const props = defineProps({
   procesando:       { type: Object,  default: () => new Set() }, // Set de IDs
   esAdmin:          { type: Boolean, default: false },
   esSupervisor:     { type: Boolean, default: false },
+  pdfsEnCurso:      { type: Object,  default: () => new Set() }, // Set de IDs con upload activo
+  pdfsNuevos:       { type: Object,  default: () => new Set() }, // Set de IDs recién subidos
 })
 
 const emit = defineEmits([
@@ -20,6 +22,7 @@ const emit = defineEmits([
   'editar',
   'eliminar',
   'cancelar',
+  'ver-documentos',
 ])
 
 const talleresVisibles = computed(() => {
@@ -64,7 +67,11 @@ function formatHora(fecha) {
           <!-- Título / descripción -->
           <td class="px-4 py-3">
             <p class="font-bold text-gray-800">{{ taller.titulo }}</p>
-            <p class="text-gray-500 text-sm">{{ taller.descripcion }}</p>
+            <p
+              v-if="taller.descripcion"
+              class="text-gray-500 text-sm max-w-xs truncate cursor-default"
+              v-tooltip.bottom="taller.descripcion.length > 80 ? { value: taller.descripcion, showDelay: 300, pt: { root: { style: 'max-width: 420px; white-space: normal' } } } : undefined"
+            >{{ taller.descripcion }}</p>
           </td>
 
           <!-- Fecha -->
@@ -99,6 +106,8 @@ function formatHora(fecha) {
               :procesando="procesando.has(taller.id)"
               :es-admin="esAdmin"
               :es-supervisor="esSupervisor"
+              :pdf-pendiente="pdfsEnCurso.has(taller.id)"
+              :pdf-nuevo="pdfsNuevos.has(taller.id)"
               @toggle-inscripcion="emit('toggle-inscripcion', taller)"
               @ver-inscritos="emit('ver-inscritos', taller)"
               @gestionar="emit('gestionar', taller)"
@@ -107,6 +116,7 @@ function formatHora(fecha) {
               @editar="emit('editar', taller)"
               @eliminar="emit('eliminar', taller)"
               @cancelar="emit('cancelar', taller)"
+              @ver-documentos="emit('ver-documentos', taller)"
             />
           </td>
         </tr>

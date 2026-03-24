@@ -7,7 +7,7 @@ import {
 } from '@services/talleres.js'
 import { showError } from '@services/toastService'
 import { useAuth } from '@/composables/useAuth'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 import Button from 'primevue/button'
 import ResumenPeriodo from '@features/TalleresArchivados/ResumenPeriodo.vue'
@@ -16,6 +16,7 @@ import DetalleModal from '@features/TalleresArchivados/DetalleModal.vue'
 import CopiarTallerModal from '@features/TalleresArchivados/CopiarTallerModal.vue'
 
 const router = useRouter()
+const route  = useRoute()
 const { esAdmin } = useAuth()
 
 watch(esAdmin, val => {
@@ -27,10 +28,11 @@ const archivados      = ref([])
 const resumen         = ref([])
 const totalArchivados = ref(0)
 const loading         = ref(false)
-const paginaOffset    = ref(0)
 
-const filtroAnio = ref(null)
-const filtroMes  = ref(null)
+// Inicializar desde query params para restaurar estado tras refresco
+const filtroAnio   = ref(route.query.anio  ? Number(route.query.anio)  : null)
+const filtroMes    = ref(route.query.mes   ? Number(route.query.mes)   : null)
+const paginaOffset = ref(route.query.page  ? (Number(route.query.page) - 1) * POR_PAGINA : 0)
 
 const opcionesAnio = computed(() => {
   const anios = [...new Set(resumen.value.map(r => r.anio))].sort((a, b) => b - a)
@@ -73,13 +75,24 @@ async function cargar() {
   }
 }
 
+/** Refleja el estado actual en la URL sin añadir entrada al historial */
+function sincURL() {
+  const query = {}
+  if (filtroAnio.value)    query.anio = filtroAnio.value
+  if (filtroMes.value)     query.mes  = filtroMes.value
+  const page = Math.floor(paginaOffset.value / POR_PAGINA) + 1
+  if (page > 1)            query.page = page
+  router.replace({ query })
+}
+
 async function aplicarFiltros() {
   paginaOffset.value = 0
+  sincURL()
   await cargar()
 }
 
 function seleccionarPeriodo(r) {
-  if (filtroAnio.value === r.anio && filtroMes.value === r.mes) {
+  if (!r || (filtroAnio.value === r.anio && filtroMes.value === r.mes)) {
     filtroAnio.value = null
     filtroMes.value  = null
   } else {
@@ -95,9 +108,14 @@ function quitarFiltros() {
   aplicarFiltros()
 }
 
+function onPage(e) {
+  paginaOffset.value = e.first
+  sincURL()
+  cargar()
+}
+
 async function verDetalle(taller) {
   detalle.value        = null
-  modalDetalle.value   = true
   loadingDetalle.value = true
   try {
     detalle.value = await getTallerArchivadoDetalle(taller.id)
@@ -142,7 +160,7 @@ async function verDetalle(taller) {
       @aplicar-filtros="aplicarFiltros"
       @quitar-filtros="quitarFiltros"
       @ver-detalle="verDetalle"
-      @page="e => { paginaOffset = e.first; cargar() }"
+      @page="onPage"
     />
   </div>
 

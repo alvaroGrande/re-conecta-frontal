@@ -1,5 +1,70 @@
 <template>
   <div>
+    <!-- Barra de filtros pasadas (siempre visible, independiente del estado de carga) -->
+    <div v-if="!esActiva" class="flex flex-wrap items-center gap-3 mb-3">
+      <!-- Búsqueda por texto -->
+      <div class="relative flex items-center">
+        <svg
+          v-if="buscando"
+          class="animate-spin h-3 w-3 absolute left-2.5 text-blue-400 pointer-events-none"
+          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+        </svg>
+        <i v-else class="pi pi-search absolute left-2.5 text-gray-400 text-xs pointer-events-none" aria-hidden="true"></i>
+        <input
+          type="search"
+          :value="filtroTexto"
+          @input="emit('buscar', $event.target.value)"
+          placeholder="Buscar por título o descripción…"
+          class="pl-7 pr-3 py-1 text-xs rounded-lg border border-gray-300 dark:border-slate-600
+                 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-200
+                 focus:outline-none focus:ring-2 focus:ring-blue-400 w-56"
+        />
+      </div>
+      <!-- Filtro por creador -->
+      <template v-if="esAdmin && opcionesCreador.length > 1">
+        <span class="text-gray-300 dark:text-slate-600 select-none">|</span>
+        <span class="text-xs text-gray-500">Creado por:</span>
+        <Select
+          :model-value="filtroCreador"
+          :options="opcionesCreador"
+          option-label="label"
+          option-value="value"
+          placeholder="Todos"
+          size="small"
+          @update:model-value="emit('filtrar-creador', $event ?? null)"
+        />
+        <button
+          v-if="filtroCreador"
+          @click="emit('filtrar-creador', null)"
+          class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border border-gray-300 dark:border-slate-500
+                 text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+        >
+          <i class="pi pi-times text-[10px]" aria-hidden="true"></i>
+          Todos
+        </button>
+      </template>
+
+      <!-- Filtro de mes activo -->
+      <template v-if="filtroAnio && filtroMes">
+        <span class="text-gray-300 dark:text-slate-600 select-none">|</span>
+        <span class="text-xs text-gray-500 dark:text-slate-400">
+          Mes: <strong class="text-gray-700 dark:text-slate-200">{{ MESES[filtroMes - 1] }} {{ filtroAnio }}</strong>
+        </span>
+        <button
+          @click="emit('filtrar-mes', null)"
+          class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border border-gray-300 dark:border-slate-500
+                 text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+        >
+          <i class="pi pi-times text-[10px]" aria-hidden="true"></i>
+          Todos
+        </button>
+      </template>
+    </div>
+
     <!-- Estado de carga -->
     <div v-if="cargando" class="flex justify-center items-center py-12">
       <div class="text-center">
@@ -25,7 +90,11 @@
     </div>
 
     <!-- Archivo por año/mes para encuestas pasadas -->
-    <div v-else-if="!esActiva && encuestas.length > 0" class="space-y-3">
+    <div
+      v-else-if="!esActiva && encuestas.length > 0"
+      class="space-y-3 transition-opacity duration-150"
+      :class="buscando ? 'opacity-50 pointer-events-none select-none' : ''"
+    >
       <div 
         v-for="(meses, anio) in archivoPorAnio" 
         :key="anio"
@@ -113,6 +182,23 @@
                     {{ encuesta.descripcion }}
                   </span>
                 </span>
+                <!-- Creador -->
+                <span
+                  v-if="esAdmin"
+                  class="text-xs flex-shrink-0 hidden md:flex items-center gap-0.5"
+                  :class="encuesta.creador ? 'text-indigo-500' : 'text-gray-400'"
+                >
+                  <i class="pi pi-user text-[10px]" aria-hidden="true"></i>
+                  <RouterLink
+                    v-if="encuesta.creador"
+                    :to="{ name: 'PerfilUsuario', params: { id: encuesta.creador.id } }"
+                    class="hover:underline"
+                    @click.stop
+                  >
+                    {{ encuesta.creador.nombre }} {{ encuesta.creador.Apellidos }}
+                  </RouterLink>
+                  <span v-else>Administración</span>
+                </span>
                 <span class="text-xs text-gray-400 flex-shrink-0 hidden sm:block">
                   {{ encuesta.respuestas || 0 }} resp.
                 </span>
@@ -142,23 +228,36 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import EncuestaCard from './EncuestaCard.vue'
+import Select from 'primevue/select'
+
+const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
 
 const props = defineProps({
-  encuestas: {
-    type: Array,
-    required: true
-  },
-  cargando: {
-    type: Boolean,
-    default: false
-  },
-  esActiva: {
-    type: Boolean,
-    default: true
-  }
+  encuestas:     { type: Array,   required: true },
+  cargando:      { type: Boolean, default: false },
+  esActiva:      { type: Boolean, default: true },
+  esAdmin:       { type: Boolean, default: false },
+  creadores:     { type: Array,   default: () => [] },
+  filtroCreador: { default: null },
+  filtroAnio:    { default: null },
+  filtroMes:     { default: null },
+  filtroTexto:   { type: String,  default: '' },
+  buscando:      { type: Boolean, default: false }
 })
 
-const emit = defineEmits(['seleccionar'])
+const emit = defineEmits(['seleccionar', 'filtrar-creador', 'filtrar-mes', 'buscar'])
+
+const opcionesCreador = computed(() => {
+  const opts = []
+  for (const c of props.creadores) {
+    if (c === null) {
+      opts.push({ label: 'Administración', value: 'admin' })
+    } else {
+      opts.push({ label: `${c.nombre} ${c.Apellidos}`, value: c.id })
+    }
+  }
+  return opts
+})
 
 // Estado de paneles abiertos por año
 const aniosAbiertos = ref({})

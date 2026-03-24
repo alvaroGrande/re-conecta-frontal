@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800">
     <!-- Encabezado -->
-    <EncuestasHeader 
+    <EncuestasHeader
       :mostrar-activas="mostrarActivas"
       :es-admin="esAdmin"
       @cambiar-filtro="cambiarFiltro"
@@ -9,12 +9,31 @@
     />
 
     <div class="max-w-7xl mx-auto px-4 py-8">
+      <!-- Resumen por mes (solo encuestas cerradas) -->
+      <ResumenEncuestas
+        v-if="!mostrarActivas"
+        :encuestas="encuestas.filter(e => e.estado !== 'activa')"
+        :filtro-anio="filtroResumenAnio"
+        :filtro-mes="filtroResumenMes"
+        @filtrar="onFiltrarResumen"
+      />
+
       <!-- Lista de encuestas -->
-      <EncuestasLista 
+      <EncuestasLista
         :encuestas="encuestasFilteradas"
         :cargando="cargando"
         :es-activa="mostrarActivas"
+        :es-admin="esAdmin"
+        :creadores="creadoresUnicos"
+        :filtro-creador="filtroCreador"
+        :filtro-anio="filtroResumenAnio"
+        :filtro-mes="filtroResumenMes"
+        :filtro-texto="filtroTexto"
+        :buscando="buscando"
         @seleccionar="seleccionarEncuesta"
+        @filtrar-creador="onFiltrarCreador"
+        @filtrar-mes="onFiltrarResumen"
+        @buscar="t => { filtroTexto = t; onBuscar() }"
       />
     </div>
 
@@ -65,6 +84,8 @@
     >
       <CrearEncuestaForm 
         :cargando="cargandoCrear"
+        :es-coordinador="usuarioActual?.rol === 2"
+        :usuarios-coordinados="usuariosCoordinados"
         @crear="crearNuevaEncuesta"
         @cancelar="cerrarModalCrear"
       />
@@ -75,6 +96,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { debounce } from 'lodash-es'
 import Dialog from 'primevue/dialog'
 import EncuestasHeader from '@features/Encuestas/EncuestasHeader.vue'
 import EncuestasLista from '@features/Encuestas/EncuestasLista.vue'
@@ -82,7 +104,9 @@ import EncuestaFormulario from '@features/Encuestas/EncuestaFormulario.vue'
 import EncuestaResultados from '@features/Encuestas/EncuestaResultados.vue'
 import AdminEncuestaDetalle from '@features/Encuestas/AdminEncuestaDetalle.vue'
 import CrearEncuestaForm from '@features/Encuestas/CrearEncuestaForm.vue'
+import ResumenEncuestas from '@features/Encuestas/ResumenEncuestas.vue'
 import { obtenerEncuestas, crearRespuestaEncuesta, obtenerResultadosEncuesta, crearEncuesta } from '@services/encuestas'
+import { getUsuarios } from '@services/usuarios'
 import { showSuccess, showError } from '@services/toastService'
 
 const router = useRouter()
@@ -100,30 +124,116 @@ const yaRespondida = ref(false)
 const enviando = ref(false)
 const cargandoCrear = ref(false)
 const usuarioActual = ref(null)
+const usuariosCoordinados = ref([])
+const filtroCreador = ref(route.query.creador || null)
+const filtroTexto   = ref(route.query.q || '')
+const buscando      = ref(false)
+let abortCtrl = null
+
+// Filtro de resumen por mes (solo vista cerrada)
+const filtroResumenAnio = ref(route.query.anio ? Number(route.query.anio) : null)
+const filtroResumenMes  = ref(route.query.mes  ? Number(route.query.mes)  : null)
+
+function onFiltrarResumen(periodo) {
+  if (!periodo) {
+    filtroResumenAnio.value = null
+    filtroResumenMes.value  = null
+  } else {
+    filtroResumenAnio.value = periodo.anio
+    filtroResumenMes.value  = periodo.mes
+  }
+  // Reflejar en la URL
+  const query = {}
+  if (!mostrarActivas.value)          query.vista = 'pasadas'
+  if (filtroResumenAnio.value)        query.anio  = filtroResumenAnio.value
+  if (filtroResumenMes.value)         query.mes   = filtroResumenMes.value
+  router.replace({ name: 'Encuestas', query })
+}
+
+const onFiltrarCreador = (valor) => {
+  filtroCreador.value = valor
+  sincFiltrosURL()
+}
+
+const sincFiltrosURL = () => {
+  const query = {}
+  if (!mostrarActivas.value)   query.vista    = 'pasadas'
+  if (filtroResumenAnio.value) query.anio     = filtroResumenAnio.value
+  if (filtroResumenMes.value)  query.mes      = filtroResumenMes.value
+  if (filtroCreador.value)     query.creador  = filtroCreador.value
+  if (filtroTexto.value.trim()) query.q       = filtroTexto.value.trim()
+  router.replace({ name: 'Encuestas', query })
+}
+
+const onBuscar = debounce(() => {
+  sincFiltrosURL()
+  cargarEncuestas({ silencioso: true })
+}, 350)
+
+const creadoresUnicos = computed(() => {
+  const vistos = new Set()
+  const lista = []
+  for (const e of encuestas.value) {
+    if (!e.creador) {
+      if (!vistos.has('admin')) { vistos.add('admin'); lista.push(null) }
+    } else {
+      if (!vistos.has(e.creador.id)) { vistos.add(e.creador.id); lista.push(e.creador) }
+    }
+  }
+  return lista
+})
 
 const esAdmin = computed(() => {
   if (!usuarioActual.value) return false
-  // rol 1 es Admin según el rolesHelper
-  return usuarioActual.value.rol === 1
+  // rol 1 = Administrador, rol 2 = Coordinador (puede gestionar encuestas)
+  return usuarioActual.value.rol === 1 || usuarioActual.value.rol === 2
 })
 
 const encuestasFilteradas = computed(() => {
-  return encuestas.value.filter(e => {
+  let lista = encuestas.value.filter(e => {
     const estaActiva = e.estado === 'activa'
     return mostrarActivas.value ? estaActiva : !estaActiva
   })
+  // Aplicar filtro de mes solo en vista cerrada
+  if (!mostrarActivas.value && filtroResumenAnio.value && filtroResumenMes.value) {
+    lista = lista.filter(e => {
+      const fecha = new Date(e.fecha_fin)
+      return fecha.getFullYear() === filtroResumenAnio.value &&
+             fecha.getMonth() + 1 === filtroResumenMes.value
+    })
+  }
+  // Aplicar filtro de creador solo en vista cerrada
+  if (!mostrarActivas.value && filtroCreador.value !== null) {
+    if (filtroCreador.value === 'admin') {
+      lista = lista.filter(e => !e.creador)
+    } else {
+      lista = lista.filter(e => e.creador?.id === filtroCreador.value)
+    }
+  }
+  return lista
 })
 
-const cargarEncuestas = async () => {
-  cargando.value = true
+const cargarEncuestas = async ({ silencioso = false } = {}) => {
+  if (abortCtrl) abortCtrl.abort()
+  abortCtrl = new AbortController()
+
+  if (silencioso) {
+    buscando.value = true
+  } else {
+    cargando.value = true
+  }
   try {
     const estado = mostrarActivas.value ? 'activa' : 'cerrada'
-    const data = await obtenerEncuestas({ estado })
+    const filtros = { estado }
+    if (filtroTexto.value.trim()) filtros.q = filtroTexto.value.trim()
+    const data = await obtenerEncuestas(filtros, abortCtrl.signal)
     encuestas.value = Array.isArray(data) ? data : data.data || []
   } catch (error) {
+    if (error.code === 'ERR_CANCELED' || error.name === 'CanceledError') return
     showError('Error al cargar encuestas')
   } finally {
     cargando.value = false
+    buscando.value = false
   }
 }
 
@@ -142,9 +252,9 @@ const cargarResultados = async (encuesta) => {
 }
 
 const seleccionarEncuesta = async (encuesta) => {
-  // Cambiar la URL preservando el query param de vista
+  // replace: abrir modal no es una navegación que deba estar en el historial
   const query = mostrarActivas.value ? {} : { vista: 'pasadas' }
-  router.push({ name: 'Encuestas', params: { id: encuesta.id }, query })
+  router.replace({ name: 'Encuestas', params: { id: encuesta.id }, query })
   
   await cargarResultados(encuesta)
   mostrarModal.value = true
@@ -173,7 +283,7 @@ const cerrarModal = () => {
   // Volver a la URL base de encuestas preservando el query param de vista
   if (route.params.id) {
     const query = mostrarActivas.value ? {} : { vista: 'pasadas' }
-    router.push({ name: 'Encuestas', query })
+    router.replace({ name: 'Encuestas', query })
   }
 }
 
@@ -198,9 +308,9 @@ const crearNuevaEncuesta = async (datoEncuesta) => {
 }
 
 const cambiarFiltro = (esActiva) => {
-  // Actualizar la URL; el watch en route.query.vista actualiza estado y datos
+  // replace en lugar de push: cambiar filtro no debe acumular historial
   const query = esActiva ? {} : { vista: 'pasadas' }
-  router.push({ name: 'Encuestas', query })
+  router.replace({ name: 'Encuestas', query })
 }
 
 const manejarEncuestaCerrada = async () => {
@@ -213,10 +323,19 @@ const manejarEncuestaCerrada = async () => {
   showSuccess('Encuesta cerrada', 'La encuesta ha sido cerrada y movida a "Pasadas"')
 }
 
-const abrirModalCrear = () => {
+const abrirModalCrear = async () => {
   if (!esAdmin.value) {
     showError('Solo los administradores pueden crear encuestas')
     return
+  }
+  // Coordinadores: cargar sus usuarios antes de abrir el modal
+  if (usuarioActual.value?.rol === 2) {
+    try {
+      const { data } = await getUsuarios()
+      usuariosCoordinados.value = data || []
+    } catch {
+      usuariosCoordinados.value = []
+    }
   }
   mostrarModalCrear.value = true
 }
@@ -254,11 +373,7 @@ const cargarEncuestaDesdeURL = async () => {
   }
 }
 
-watch(mostrarActivas, () => {
-  cerrarModal()
-})
-
-// Sincronizar estado con cambios en ?vista (navegación directa, botones atrás/adelante)
+// Limpiar filtro de mes al cambiar a vista activas
 watch(() => route.query.vista, (vistaQuery) => {
   const deberiaSerActiva = vistaQuery !== 'pasadas'
   // Guard: no-admins no pueden acceder a la vista de pasadas
@@ -268,6 +383,11 @@ watch(() => route.query.vista, (vistaQuery) => {
   }
   if (mostrarActivas.value !== deberiaSerActiva) {
     mostrarActivas.value = deberiaSerActiva
+    // Limpiar filtros al cambiar de vista
+    filtroResumenAnio.value = null
+    filtroResumenMes.value  = null
+    filtroCreador.value     = null
+    filtroTexto.value       = ''
     cargarEncuestas()
   }
 })
