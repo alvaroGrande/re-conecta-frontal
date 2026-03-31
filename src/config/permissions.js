@@ -68,6 +68,7 @@ export const PERMISOS = {
 
   // Administración
   ROLES_GESTIONAR: 'roles:gestionar',
+  CONFIGURACION_VER: 'configuracion:ver',
 };
 
 /** @type {Record<number, string[]>} */

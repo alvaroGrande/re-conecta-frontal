@@ -72,9 +72,12 @@ const cargarUsuarioActual = () => {
     const usuarioJSON = localStorage.getItem('usuario')
     if (usuarioJSON) {
       usuarioActual.value = JSON.parse(usuarioJSON)
+    } else {
+      usuarioActual.value = null
     }
   } catch (error) {
     console.error('Error al cargar usuario actual:', error)
+    usuarioActual.value = null
   }
 }
 
@@ -87,6 +90,8 @@ onMounted(() => {
   
   // Escuchar cambios en el localStorage (para sincronizar entre pestañas)
   window.addEventListener('storage', cargarUsuarioActual)
+  // Escuchar cambios de auth en la misma pestaña
+  window.addEventListener('auth-updated', cargarUsuarioActual)
 })
 
 onBeforeUnmount(() => {
@@ -94,6 +99,7 @@ onBeforeUnmount(() => {
     clearInterval(intervaloReloj)
   }
   window.removeEventListener('storage', cargarUsuarioActual)
+  window.removeEventListener('auth-updated', cargarUsuarioActual)
 })
 </script>
 

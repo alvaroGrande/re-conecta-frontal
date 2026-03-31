@@ -132,7 +132,13 @@
                   <i class="pi pi-user text-xs mr-1"></i>
                   {{ getNombreUsuario(notif) }}
                 </span>
-                <span>{{ formatearFecha(notif.created_at) }}</span>
+                <div class="flex items-center gap-2">
+                  <span class="flex items-center gap-1">
+                    <i :class="getIconoCanal(notif.canal)" class="text-xs"></i>
+                    {{ getNombreCanal(notif.canal) }}
+                  </span>
+                  <span>{{ formatearFecha(notif.created_at) }}</span>
+                </div>
               </div>
             </div>
 
@@ -388,6 +394,24 @@ const getColorTipo = (tipo) => {
     alerta: 'bg-red-100 text-red-600'
   }
   return colores[tipo] || 'bg-gray-100 text-gray-600'
+}
+
+const getIconoCanal = (canal) => {
+  const iconos = {
+    push: 'pi pi-bell',
+    email: 'pi pi-envelope',
+    whatsapp: 'pi pi-whatsapp'
+  }
+  return iconos[canal] || 'pi pi-bell'
+}
+
+const getNombreCanal = (canal) => {
+  const nombres = {
+    push: 'Push',
+    email: 'Email',
+    whatsapp: 'WhatsApp'
+  }
+  return nombres[canal] || 'Push'
 }
 
 // Manejar nuevas notificaciones desde Socket.IO

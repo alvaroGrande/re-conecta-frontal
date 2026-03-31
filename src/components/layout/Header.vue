@@ -26,6 +26,9 @@
         <RouterLink v-if="esAdmin" to="/roles-permisos" class="hover:text-accent flex items-center gap-1" aria-label="Roles y Permisos" title="Roles y Permisos">
           <i class="pi pi-shield" aria-hidden="true"></i>
         </RouterLink>
+        <RouterLink v-if="esAdmin" to="/configuracion" class="hover:text-accent flex items-center gap-1" aria-label="Configuración" title="Configuración">
+          <i class="pi pi-cog" aria-hidden="true"></i>
+        </RouterLink>
         <RouterLink to="/perfil" class="hover:text-accent" aria-label="Mi perfil" title="Mi perfil">
           <i class="pi pi-user text-white" aria-hidden="true"></i>
         </RouterLink>
@@ -114,6 +117,12 @@
 <RouterLink @click="isOpen=false" to="/roles-permisos" class="hover:text-gray-200 flex items-center gap-2">
           <i class="pi pi-shield" aria-hidden="true"></i>
           Roles y Permisos
+        </RouterLink>
+</li>
+        <li v-if="esAdmin">
+<RouterLink @click="isOpen=false" to="/configuracion" class="hover:text-gray-200 flex items-center gap-2">
+          <i class="pi pi-cog" aria-hidden="true"></i>
+          Configuración
         </RouterLink>
 </li>
         <li>

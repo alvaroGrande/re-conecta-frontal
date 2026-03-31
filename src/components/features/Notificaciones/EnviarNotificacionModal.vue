@@ -84,18 +84,19 @@
         </div>
       </div>
 
-      <!-- URL (opcional) - Solo Admin e Instructor -->
+      <!-- Canal de notificación -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">
-          Enlace (opcional)
-        </label>
-        <InputText
-          v-model="form.url"
-          placeholder="/talleres, /encuestas, etc."
+        <label class="block text-sm font-medium text-gray-700 mb-2">Canal de envío</label>
+        <Dropdown
+          v-model="form.canal"
+          :options="canalesNotificacion"
+          option-label="label"
+          option-value="value"
+          placeholder="Selecciona el canal"
           class="w-full"
         />
         <div class="text-xs text-gray-500 mt-1">
-          Ruta interna de la aplicación
+          {{ getDescripcionCanal(form.canal) }}
         </div>
       </div>
     </div>
@@ -146,7 +147,8 @@ const form = ref({
   receptor_id: null,
   titulo: '',
   contenido: '',
-  url: ''
+  url: '',
+  canal: 'push'
 })
 
 const enviando = ref(false)
@@ -158,6 +160,12 @@ const tiposNotificacion = [
   { label: '📢 Anuncio', value: 'anuncio' },
   { label: '⏰ Recordatorio', value: 'recordatorio' },
   { label: '⚠️ Alerta', value: 'alerta' }
+]
+
+const canalesNotificacion = [
+  { label: '📱 Push (Inmediata)', value: 'push' },
+  { label: '📧 Email', value: 'email' },
+  { label: '💬 WhatsApp', value: 'whatsapp' }
 ]
 
 const user = computed(() => {
@@ -191,6 +199,15 @@ const getRolTexto = (rol) => {
   return roles[rol] || 'Usuario'
 }
 
+const getDescripcionCanal = (canal) => {
+  const descripciones = {
+    push: 'Notificación inmediata en la aplicación',
+    email: 'Envío por correo electrónico (procesamiento en cola)',
+    whatsapp: 'Mensaje de WhatsApp (procesamiento en cola)'
+  }
+  return descripciones[canal] || ''
+}
+
 const cargarDestinatarios = async () => {
   try {
     if (user.value.rol === 2) {
@@ -216,7 +233,8 @@ const enviar = async () => {
         tipo: form.value.tipo,
         titulo: form.value.titulo,
         contenido: form.value.contenido,
-        url: form.value.url || undefined
+        url: form.value.url || undefined,
+        canal: form.value.canal
       })
       showSuccess(`Notificación enviada a ${receptoresIds.length} usuarios`)
     } else {
@@ -226,7 +244,8 @@ const enviar = async () => {
         tipo: form.value.tipo,
         titulo: form.value.titulo,
         contenido: form.value.contenido,
-        url: form.value.url || undefined
+        url: form.value.url || undefined,
+        canal: form.value.canal
       })
       showSuccess('Notificación enviada correctamente')
     }
@@ -253,7 +272,8 @@ const resetForm = () => {
     receptor_id: null,
     titulo: '',
     contenido: '',
-    url: ''
+    url: '',
+    canal: 'push'
   }
   envioMasivo.value = false
 }

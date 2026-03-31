@@ -1,6 +1,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { logout } from '@services/auth'
+import { useAuth } from '@composables/useAuth'
 import { showWarn } from '@services/toastService'
 
 /**
@@ -8,8 +9,9 @@ import { showWarn } from '@services/toastService'
  * @param {number} timeout - Tiempo de inactividad en milisegundos (default: 60000 = 1 minuto)
  * @param {number} warningTimeout - Tiempo del contador de advertencia en segundos (default: 30)
  */
-export function useInactivityTimer(timeout = 1500, warningTimeout = 30) {
+export function useInactivityTimer(timeout = 100, warningTimeout = 30) {
   const router = useRouter()
+  const { clearAuth } = useAuth()
   let inactivityTimer = null
   let warningTimer = null
   let countdownInterval = null
@@ -82,13 +84,17 @@ export function useInactivityTimer(timeout = 1500, warningTimeout = 30) {
   const handleInactivity = () => {
     // Cerrar modal
     showWarningModal.value = false
-    
-    // Cerrar sesión por inactividad
+    showTimerBadge.value = false
+
+    // Limpiar estado reactivo inmediatamente → menú desaparece al instante
+    clearAuth()
+
+    // Cerrar sesión en servidor (fire-and-forget)
     logout('inactividad')
-    
+
     // Mostrar mensaje
     showWarn('Sesión cerrada por inactividad', 'Tu sesión ha sido cerrada automáticamente debido a inactividad.')
-    
+
     // Redirigir al login
     router.push({ name: 'Login' })
   }

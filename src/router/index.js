@@ -18,6 +18,7 @@ const Encuestas = () => import('@pages/Encuestas.vue')
 const Calendario = () => import('@pages/Calendario.vue')
 const NotFound = () => import('@pages/NotFound.vue')
 const RolesPermisos = () => import('@pages/RolesPermisos.vue')
+const Configuracion = () => import('@pages/Configuracion.vue')
 
 /**
  * meta.permission: permiso requerido para acceder a la ruta (ej: 'dashboard:ver').
@@ -39,6 +40,7 @@ const routes = [
   { path: '/videollamada', component: VideoCall, name: 'Videollamadas', meta: { permission: 'videollamadas:ver' } },
   { path: '/usuarios', component: Usuarios, name: 'Usuarios', meta: { permission: 'usuarios:ver' } },
   { path: '/roles-permisos', component: RolesPermisos, name: 'RolesPermisos', meta: { permission: 'roles:gestionar' } },
+  { path: '/configuracion', component: Configuracion, name: 'Configuracion', meta: { permission: 'configuracion:ver' } },
   // Ruta catch-all para 404 - debe estar al final
   { path: '/:pathMatch(.*)*', component: NotFound, name: 'NotFound' }
 ]

@@ -81,3 +81,43 @@ export const eliminarNotificacion = async (notificacionId) => {
   const response = await api.delete(`/notificaciones/${notificacionId}`);
   return response.data;
 };
+
+/**
+ * Obtener configuración de notificaciones del usuario
+ */
+export const obtenerConfiguracionNotificaciones = async () => {
+  const response = await api.get('/notificaciones/config');
+  return response.data;
+};
+
+/**
+ * Actualizar configuración de notificaciones
+ */
+export const actualizarConfiguracionNotificaciones = async (config) => {
+  const response = await api.put('/notificaciones/config', config);
+  return response.data;
+};
+
+/**
+ * Obtener plantillas disponibles (solo admin)
+ */
+export const obtenerPlantillas = async () => {
+  const response = await api.get('/notificaciones/plantillas');
+  return response.data;
+};
+
+/**
+ * Verificar estado de servicios externos
+ */
+export const verificarEstadoServicios = async () => {
+  const response = await api.get('/notificaciones/servicios/estado');
+  return response.data;
+};
+
+/**
+ * Obtener cola de notificaciones pendientes (solo admin)
+ */
+export const obtenerColaNotificaciones = async () => {
+  const response = await api.get('/notificaciones/cola');
+  return response.data;
+};

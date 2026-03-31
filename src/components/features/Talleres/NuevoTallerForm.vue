@@ -4,7 +4,7 @@ import Select from 'primevue/select'
 import DatePicker from 'primevue/datepicker'
 import Button from 'primevue/button'
 import { crearTaller, editarTaller, subirDocumentoPDF } from '@/services/talleres.js'
-import { TIPO_PAGO_CURSO, TIPO_CURSO } from '@/helpers/constants.js'
+import { useLOVOpciones } from '@/composables/useLOV.js'
 import { showError, showSuccess } from '@services/toastService'
 
 const props = defineProps({
@@ -14,18 +14,8 @@ const emit = defineEmits(['taller-creado', 'taller-editado', 'pdfs-subiendo', 'p
 
 const modoEdicion = computed(() => !!props.taller)
 
-const tiposCursos = ref(
-  Object.entries(TIPO_CURSO).map(([key, value]) => ({
-    name: key.charAt(0) + key.slice(1).toLowerCase(),
-    code: value.toLowerCase()
-  }))
-)
-const tiposPago = ref(
-  Object.entries(TIPO_PAGO_CURSO).map(([key, value]) => ({
-    name: key.charAt(0) + key.slice(1).toLowerCase(),
-    code: value.toLowerCase()
-  }))
-)
+const tiposCursos = useLOVOpciones('tipo_curso')
+const tiposPago   = useLOVOpciones('tipo_pago')
 
 function buildFormDefault() {
   return {
@@ -53,6 +43,11 @@ watch(() => props.taller, () => {
   errors.value = {}
   pdfsSel.value = []
 })
+
+// Cuando los LOVs terminen de cargar, restaurar la selección correcta en el form
+watch([tiposCursos, tiposPago], () => {
+  if (tiposCursos.value.length && tiposPago.value.length) form.value = buildFormDefault()
+}, { once: true })
 
 function validarForm() {
   errors.value = {}

@@ -12,6 +12,12 @@ import router from '../router'
 // Función helper para actualizar el estado global
 let authStateUpdater = null
 
+const emitAuthChanged = () => {
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('auth-updated'))
+    }
+}
+
 export const setAuthStateUpdater = (updater) => {
   authStateUpdater = updater
 }
@@ -49,6 +55,7 @@ export const iniciarSesion = async (credenciales) => {
         if (authStateUpdater && data.token) {
           authStateUpdater(data.token, data.usuario)
         }
+                emitAuthChanged()
         
         // Conectar Socket.IO con el token
         if (data.token) {
@@ -57,7 +64,18 @@ export const iniciarSesion = async (credenciales) => {
         
         return data
     } catch (error) {
-        console.error('Error al iniciar sesión:', error)
+                const status = error?.response?.status ?? 'N/A'
+                const mensaje = error?.response?.data?.message ?? error?.message ?? 'Error desconocido'
+
+                console.groupCollapsed(
+                    '%c🚫 Login fallido %c(revisa credenciales o backend)',
+                    'background:#ef4444;color:#fff;padding:2px 8px;border-radius:999px;font-weight:700;',
+                    'color:#6b7280;font-weight:500;'
+                )
+                console.log('%cStatus:%c', 'color:#ef4444;font-weight:700;', 'color:inherit;', status)
+                console.log('%cMensaje:%c', 'color:#f59e0b;font-weight:700;', 'color:inherit;', mensaje)
+                console.error('%cDetalle técnico:', 'color:#8b5cf6;font-weight:700;', error)
+                console.groupEnd()
         throw error
     }
 }
@@ -112,6 +130,12 @@ export const cerrarSesion = async (motivo = 'manual') => {
     } finally {
         localStorage.removeItem('token')
         localStorage.removeItem('usuario')
+
+                // Sincronizar estado reactivo global de auth en la misma pestaña
+                if (authStateUpdater) {
+                    authStateUpdater(null, null)
+                }
+                emitAuthChanged()
         
         // Desconectar Socket.IO
         desconectarSocket()

@@ -62,15 +62,18 @@ import ImpersonationBanner from '@layout/ImpersonationBanner.vue'
 import { RouterView } from 'vue-router'
 import { useToast } from "primevue/usetoast";
 import { setToast } from "@services/toastService";
+import { setAuthStateUpdater } from '@services/auth'
 import { useInactivityTimer } from "@composables/useInactivityTimer";
 import InactivityWarningModal from '@layout/InactivityWarningModal.vue'
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
 import { INACTIVITY_CONFIG } from '@helpers/constants'
 import { useTheme } from '@composables/useTheme'
+import { useAuth } from '@composables/useAuth'
 
 const toast = useToast();
 const { initTheme } = useTheme()
+const { setAuth } = useAuth()
 
 // Detectar inactividad del usuario
 const { 
@@ -96,6 +99,7 @@ const handleSessionTimeout = () => {
 }
 
 onMounted(() => {
+  setAuthStateUpdater(setAuth) // Sincroniza estado auth reactivo con el servicio
   setToast(toast); // Registramos la instancia global
   initTheme();     // Aplicar tema guardado o preferencia del sistema
 });

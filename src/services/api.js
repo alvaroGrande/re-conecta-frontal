@@ -33,7 +33,7 @@ api.interceptors.response.use(
       return Promise.reject(error)
     }
 
-    console.error('API Error:', error);
+    //console.error('API Error:', error);
 
     // Errores de negocio esperados (manejados por cada componente)
     const silentStatuses = [409, 403];
