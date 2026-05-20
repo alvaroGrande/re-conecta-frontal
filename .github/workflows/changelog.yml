@@ -1,0 +1,116 @@
+name: Changelog & Version Bump
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  changelog:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: Extraer commits y actualizar changelog
+        id: update_changelog
+        run: |
+          # Obtener commits de la PR usando la API de GitHub
+          PR_NUMBER=${{ github.event.pull_request.number }}
+          REPO=${{ github.repository }}
+
+          COMMITS=$(gh api repos/$REPO/pulls/$PR_NUMBER/commits \
+            --jq '.[].commit.message' | head -n 100)
+
+          # Leer versión actual del package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          MAJOR=$(echo $CURRENT_VERSION | cut -d. -f1)
+          MINOR=$(echo $CURRENT_VERSION | cut -d. -f2)
+          PATCH=$(echo $CURRENT_VERSION | cut -d. -f3)
+
+          # Clasificar commits y determinar bump de versión
+          FEATURES=""
+          FIXES=""
+          HOTFIXES=""
+          HAS_FEATURE=false
+          HAS_HOTFIX=false
+
+          while IFS= read -r COMMIT; do
+            FIRST_LINE=$(echo "$COMMIT" | head -n 1)
+            if echo "$FIRST_LINE" | grep -iqE "^(hotfix)"; then
+              HOTFIXES="$HOTFIXES\n  - $FIRST_LINE"
+              HAS_HOTFIX=true
+            elif echo "$FIRST_LINE" | grep -iqE "^(feature)"; then
+              FEATURES="$FEATURES\n  - $FIRST_LINE"
+              HAS_FEATURE=true
+            elif echo "$FIRST_LINE" | grep -iqE "^(fix)"; then
+              FIXES="$FIXES\n  - $FIRST_LINE"
+            fi
+          done <<< "$COMMITS"
+
+          # Calcular nueva versión
+          # Hotfix → patch, Feature → minor (reset patch), ambos → minor
+          if [ "$HAS_FEATURE" = true ]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          elif [ "$HAS_HOTFIX" = true ]; then
+            PATCH=$((PATCH + 1))
+          else
+            PATCH=$((PATCH + 1))
+          fi
+
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          DATE=$(date +%Y-%m-%d)
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_URL="${{ github.event.pull_request.html_url }}"
+
+          # Construir entrada del changelog
+          ENTRY="## [$NEW_VERSION] - $DATE\n\n### PR: [$PR_TITLE]($PR_URL)\n"
+
+          if [ -n "$HOTFIXES" ]; then
+            ENTRY="$ENTRY\n### 🚨 Hotfixes\n$HOTFIXES\n"
+          fi
+          if [ -n "$FEATURES" ]; then
+            ENTRY="$ENTRY\n### ✨ Features\n$FEATURES\n"
+          fi
+          if [ -n "$FIXES" ]; then
+            ENTRY="$ENTRY\n### 🐛 Fixes\n$FIXES\n"
+          fi
+
+          # Insertar nueva entrada al inicio del changelog (después del encabezado)
+          if [ -f CHANGELOG.md ]; then
+            # Insertar después de la primera línea (# Changelog)
+            HEAD=$(head -n 1 CHANGELOG.md)
+            TAIL=$(tail -n +2 CHANGELOG.md)
+            printf "%s\n\n%b\n%s" "$HEAD" "$ENTRY" "$TAIL" > CHANGELOG.md
+          else
+            printf "# Changelog\n\n%b\n" "$ENTRY" > CHANGELOG.md
+          fi
+
+          # Actualizar versión en package.json
+          npm version $NEW_VERSION --no-git-tag-version
+
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit changelog y versión
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md package.json
+          git commit -m "chore: changelog y versión ${{ steps.update_changelog.outputs.new_version }} [skip ci]"
+          git push
