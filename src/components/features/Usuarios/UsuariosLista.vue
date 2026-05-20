@@ -45,6 +45,22 @@
       </button>
     </div>
 
+    <!-- Botones de acciones rápidas -->
+    <div class="flex gap-4 mb-4">
+      <button
+        @click="seleccionarCoordinadores"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+      >
+        Seleccionar Coordinadores
+      </button>
+      <button
+        @click="seleccionarUsuarios"
+        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition"
+      >
+        Seleccionar Usuarios
+      </button>
+    </div>
+
     <!-- DataTable de PrimeVue -->
     <DataTable
       :value="usuarios"
@@ -310,4 +326,19 @@ onMounted(() => {
   cargarDesdeFiltrosURL()
   cargarUsuariosConFiltros()
 })
+</script>
+
+<script>
+export default {
+  methods: {
+    seleccionarCoordinadores() {
+      this.filtro.role = 'coordinador';
+      this.buscarUsuarios();
+    },
+    seleccionarUsuarios() {
+      this.filtro.role = 'usuario';
+      this.buscarUsuarios();
+    },
+  },
+};
 </script>

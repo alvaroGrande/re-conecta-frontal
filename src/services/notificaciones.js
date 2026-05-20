@@ -35,9 +35,9 @@ export const contarNoLeidas = async () => {
 /**
  * Obtener notificaciones enviadas
  */
-export const obtenerNotificacionesEnviadas = async (limite = 50) => {
+export const obtenerNotificacionesEnviadas = async (limite = 20, offset = 0) => {
   const response = await api.get('/notificaciones/enviadas', {
-    params: { limite }
+    params: { limit: limite, offset }
   });
   return response.data;
 };

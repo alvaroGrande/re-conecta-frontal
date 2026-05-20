@@ -121,7 +121,7 @@ Medio.
 
 ---
 
-## 3.4 Recordatorios inteligentes
+## 3.4 Recordatorios inteligentes ✅ (Completado)
 **Descripción**
 Motor de recordatorios configurable:
 - Antes de taller (24h, 1h, 10 min).
@@ -152,7 +152,7 @@ Medio-Alto.
 
 ---
 
-## 3.5 Plantillas reutilizables (Talleres y Encuestas)
+## 3.5 Plantillas reutilizables (Talleres y Encuestas) ✅ (Completado — Encuestas)
 **Descripción**
 Permitir guardar configuración como plantilla para reutilización rápida.
 
@@ -160,9 +160,10 @@ Permitir guardar configuración como plantilla para reutilización rápida.
 Creación repetitiva de talleres y encuestas similares.
 
 **Alcance**
-- CRUD de plantillas.
-- Duplicar desde plantilla.
-- Versionado simple por plantilla.
+- CRUD de plantillas. ✅ (Encuestas)
+- Duplicar desde plantilla. ✅ (Encuestas)
+- Versionado simple por plantilla. ✅ (Encuestas)
+- Plantillas de talleres: pendiente.
 
 **Impacto**
 Medio-Alto.
@@ -180,7 +181,7 @@ Medio.
 
 ---
 
-## 3.6 Centro de notificaciones unificado
+## 3.6 Centro de notificaciones unificado ✅ (Completado)
 **Descripción**
 Inbox único con:
 - Filtros (tipo, leídas/no leídas, entidad).
@@ -211,7 +212,7 @@ Medio.
 
 ---
 
-## 3.7 Búsqueda global
+## 3.7 Búsqueda global ✅ (Completado)
 **Descripción**
 Barra de búsqueda global para usuarios, talleres, encuestas, documentos.
 
@@ -338,6 +339,8 @@ Objetivo: mejorar control y operación diaria.
 - H1: Modelo de auditoría completo + endpoints.
 - H2: Dashboard v1 en producción.
 - H3: Waitlist funcionando con promoción automática.
+- H3b: Recordatorios inteligentes de talleres (24h/1h/10min/post-taller) ✅.
+- H3c: Plantillas de encuestas con CRUD y creación desde plantilla ✅.
 
 ---
 
@@ -346,14 +349,14 @@ Objetivo: reducir trabajo manual y acelerar ejecución.
 
 **Entregables**
 - Plantillas reutilizables.
-- Centro de notificaciones unificado.
-- Búsqueda global.
+- Centro de notificaciones unificado ✅.
+- Búsqueda global ✅.
 - Versionado de documentos.
 
 **Hitos**
 - H4: Plantillas operativas para talleres/encuestas.
-- H5: Inbox de notificaciones con acciones rápidas.
-- H6: Búsqueda global con atajo.
+- H5: Inbox de notificaciones con acciones rápidas ✅.
+- H6: Búsqueda global con atajo ✅.
 
 ---
 

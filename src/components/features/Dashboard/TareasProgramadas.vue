@@ -17,11 +17,11 @@
     <!-- Estadísticas generales -->
     <div v-if="estadisticas" class="grid grid-cols-4 gap-4 mb-6">
       <div class="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
-        <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ estadisticas.total_ejecuciones || 0 }}</div>
+        <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ formatearNumero(estadisticas.total_ejecuciones) }}</div>
         <div class="text-sm text-gray-600 dark:text-slate-400">Total</div>
       </div>
       <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
-        <div class="text-2xl font-bold text-green-600 dark:text-green-400">{{ estadisticas.exitosas || 0 }}</div>
+        <div class="text-2xl font-bold text-green-600 dark:text-green-400">{{ formatearNumero(estadisticas.exitosas) }}</div>
         <div class="text-sm text-gray-600 dark:text-slate-400">Exitosas</div>
       </div>
       <div class="bg-red-50 dark:bg-red-900/20 rounded-lg p-4">
@@ -207,6 +207,13 @@ const formatearFecha = (fecha) => {
     hour: '2-digit',
     minute: '2-digit'
   });
+};
+
+const formatearNumero = (n) => {
+  if (!n && n !== 0) return '0';
+  const num = Number(n);
+  if (num >= 1000) return `${(num / 1000).toFixed(1).replace(/\.0$/, '')}k`;
+  return String(num);
 };
 
 const formatearDuracion = (ms) => {

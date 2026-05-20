@@ -16,7 +16,7 @@ export const CATALOGO_GRUPOS = [
     label: 'Talleres',
     icon: 'pi pi-calendar',
     permisos: [
-      { permiso: 'talleres:ver',            descripcion: 'Ver lista de talleres' },
+      { permiso: 'talleres:ver',             descripcion: 'Ver lista de talleres' },
       { permiso: 'talleres:crear',           descripcion: 'Crear talleres' },
       { permiso: 'talleres:editar',          descripcion: 'Editar talleres' },
       { permiso: 'talleres:eliminar',        descripcion: 'Eliminar talleres' },

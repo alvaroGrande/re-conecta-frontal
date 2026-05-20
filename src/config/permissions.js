@@ -66,6 +66,10 @@ export const PERMISOS = {
   CONTACTOS_VER: 'contactos:ver',
   CONTACTOS_GESTIONAR: 'contactos:gestionar',
 
+  // Chat
+  CHAT_VER: 'chat:ver',
+  CHAT_GESTIONAR: 'chat:gestionar', // crear/eliminar grupos
+
   // Administración
   ROLES_GESTIONAR: 'roles:gestionar',
   CONFIGURACION_VER: 'configuracion:ver',
@@ -107,6 +111,9 @@ export const PERMISOS_POR_ROL = {
 
     PERMISOS.CONTACTOS_VER,
     PERMISOS.CONTACTOS_GESTIONAR,
+
+    PERMISOS.CHAT_VER,
+    PERMISOS.CHAT_GESTIONAR,
   ],
 
   [ROLES.USUARIO]: [
@@ -126,5 +133,7 @@ export const PERMISOS_POR_ROL = {
     PERMISOS.NOTIFICACIONES_VER,
 
     PERMISOS.CONTACTOS_VER,
+
+    PERMISOS.CHAT_VER,
   ],
 };

@@ -13,7 +13,7 @@
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
     "@primeuix/themes": "^1.2.3",
-    "@tailwindcss/vite": "^4.2.1",
+    "@tailwindcss/vite": "^4.2.2",
     "@vercel/analytics": "^2.0.1",
     "@zoom/meetingsdk": "^5.0.4",
     "axios": "^1.12.2",
@@ -32,6 +32,6 @@
     "@vitejs/plugin-vue": "^6.0.5",
     "eslint": "^8.57.1",
     "eslint-plugin-vue": "^9.33.0",
-    "vite": "^7.0.0"
+    "vite": "^8.0.4"
   }
 }

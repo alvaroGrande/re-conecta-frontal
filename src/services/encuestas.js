@@ -86,3 +86,68 @@ export const obtenerRespuestasDeUsuario = async (encuestaId, usuarioId) => {
     throw error
   }
 }
+
+// ── Plantillas de encuestas ──────────────────────────────────
+
+export const obtenerPlantillas = async ({ soloActivas = true } = {}) => {
+  try {
+    const params = new URLSearchParams()
+    if (!soloActivas) params.append('todas', '1')
+    const url = `/encuestas/plantillas${params.toString() ? '?' + params.toString() : ''}`
+    const response = await api.get(url)
+    return response.data
+  } catch (error) {
+    console.error('Error al obtener plantillas:', error)
+    throw error
+  }
+}
+
+export const obtenerPlantillaPorId = async (id) => {
+  try {
+    const response = await api.get(`/encuestas/plantillas/${id}`)
+    return response.data
+  } catch (error) {
+    console.error('Error al obtener plantilla:', error)
+    throw error
+  }
+}
+
+export const crearPlantilla = async (datos) => {
+  try {
+    const response = await api.post('/encuestas/plantillas', datos)
+    return response.data
+  } catch (error) {
+    console.error('Error al crear plantilla:', error)
+    throw error
+  }
+}
+
+export const actualizarPlantilla = async (id, cambios) => {
+  try {
+    const response = await api.put(`/encuestas/plantillas/${id}`, cambios)
+    return response.data
+  } catch (error) {
+    console.error('Error al actualizar plantilla:', error)
+    throw error
+  }
+}
+
+export const eliminarPlantilla = async (id) => {
+  try {
+    const response = await api.delete(`/encuestas/plantillas/${id}`)
+    return response.data
+  } catch (error) {
+    console.error('Error al eliminar plantilla:', error)
+    throw error
+  }
+}
+
+export const crearEncuestaDesde = async (plantillaId, datos) => {
+  try {
+    const response = await api.post(`/encuestas/plantillas/${plantillaId}/crear-encuesta`, datos)
+    return response.data
+  } catch (error) {
+    console.error('Error al crear encuesta desde plantilla:', error)
+    throw error
+  }
+}

@@ -22,6 +22,9 @@
         <RouterLink to="/calendario" class="hover:text-accent flex items-center gap-1">
           {{ $t('nav.calendar') }}
         </RouterLink>
+        <RouterLink to="/chat" class="hover:text-accent flex items-center gap-1" aria-label="Chat" title="Chat">
+          <i class="pi pi-comments" aria-hidden="true"></i>
+        </RouterLink>
         <RouterLink v-if="esAdmin" to="/usuarios" class="hover:text-accent">{{ $t('nav.users') }}</RouterLink>
         <RouterLink v-if="esAdmin" to="/roles-permisos" class="hover:text-accent flex items-center gap-1" aria-label="Roles y Permisos" title="Roles y Permisos">
           <i class="pi pi-shield" aria-hidden="true"></i>
@@ -33,8 +36,28 @@
           <i class="pi pi-user text-white" aria-hidden="true"></i>
         </RouterLink>
         
+        <!-- Búsqueda global -->
+        <button
+          @click="busquedaVisible = true"
+          class="hover:text-accent flex items-center gap-1 transition-colors"
+          aria-label="Buscar (Ctrl+K)"
+          title="Buscar (Ctrl+K)"
+        >
+          <i class="pi pi-search" aria-hidden="true"></i>
+        </button>
+
         <!-- Panel de notificaciones -->
         <NotificacionesPanel />
+
+        <!-- Link al centro de notificaciones -->
+        <RouterLink
+          to="/notificaciones"
+          class="hover:text-accent flex items-center gap-1 transition-colors"
+          aria-label="Centro de notificaciones"
+          title="Centro de notificaciones"
+        >
+          <i class="pi pi-list" aria-hidden="true"></i>
+        </RouterLink>
 
         <!-- Toggle modo claro/oscuro -->
         <button
@@ -107,6 +130,12 @@
           {{ $t('nav.calendar') }}
         </RouterLink>
 </li>
+        <li>
+<RouterLink @click="isOpen=false" to="/chat" class="hover:text-gray-200 flex items-center gap-2">
+          <i class="pi pi-comments" aria-hidden="true"></i>
+          Chat
+        </RouterLink>
+</li>
         <li v-if="esAdmin">
 <RouterLink @click="isOpen=false" to="/usuarios" class="hover:text-gray-200 flex items-center gap-2">
           <i class="pi pi-users" aria-hidden="true"></i>
@@ -123,6 +152,12 @@
 <RouterLink @click="isOpen=false" to="/configuracion" class="hover:text-gray-200 flex items-center gap-2">
           <i class="pi pi-cog" aria-hidden="true"></i>
           Configuración
+        </RouterLink>
+</li>
+        <li>
+<RouterLink @click="isOpen=false" to="/notificaciones" class="hover:text-gray-200 flex items-center gap-2">
+          <i class="pi pi-bell" aria-hidden="true"></i>
+          Notificaciones
         </RouterLink>
 </li>
         <li>
@@ -150,10 +185,13 @@
       </ul>
     </nav>
   </header>
+
+  <!-- Búsqueda global (Ctrl+K) -->
+  <BusquedaGlobal v-model:visible="busquedaVisible" />
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { logout } from '@services/auth'
 import { useTheme } from '@composables/useTheme'
@@ -163,18 +201,37 @@ import Button from 'primevue/button'
 import logo from '@/assets/re-conecta.svg'
 import NotificacionesPanel from '@features/Notificaciones/NotificacionesPanel.vue'
 import LanguageSwitcher from '@shared/LanguageSwitcher.vue'
+import BusquedaGlobal from '@shared/BusquedaGlobal.vue'
 
 const router = useRouter()
 const isOpen = ref(false)
 const { isAuthenticated, esAdmin, clearAuth } = useAuth()
 const { isDark, toggleTheme } = useTheme()
+const busquedaVisible = ref(false)
+
+const cerrarBusquedasYMenus = () => {
+  busquedaVisible.value = false
+  isOpen.value = false
+}
+
+watch(isAuthenticated, (autenticado) => {
+  if (!autenticado) cerrarBusquedasYMenus()
+})
+
+onMounted(() => {
+  window.addEventListener('auth-updated', cerrarBusquedasYMenus)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('auth-updated', cerrarBusquedasYMenus)
+})
 
 // Manejar cierre de sesión
 const handleLogout = () => {
+  cerrarBusquedasYMenus()
   logout()
   clearAuth()
   showSuccess('Sesión cerrada correctamente')
   router.push({ name: 'Login' })
-  isOpen.value = false
 }
 </script>

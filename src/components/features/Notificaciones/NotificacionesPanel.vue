@@ -167,6 +167,17 @@
           </div>
         </div>
       </div>
+
+      <!-- Enlace al centro completo -->
+      <div class="mt-4 pt-3 border-t border-gray-200 dark:border-slate-700">
+        <button
+          class="w-full flex items-center justify-center gap-2 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
+          @click="irAlCentro"
+        >
+          <i class="pi pi-list text-xs"></i>
+          Ver centro de notificaciones
+        </button>
+      </div>
     </Drawer>
 
     <!-- Dialog: Confirmar eliminación -->
@@ -242,6 +253,11 @@ const togglePanel = () => {
 
 const toggleFiltro = () => {
   mostrarSoloNoLeidas.value = !mostrarSoloNoLeidas.value
+}
+
+const irAlCentro = () => {
+  panelVisible.value = false
+  router.push({ name: 'CentroNotificaciones' })
 }
 
 const cargarNotificaciones = async () => {

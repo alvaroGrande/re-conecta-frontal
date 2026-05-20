@@ -41,28 +41,32 @@ export const setAuthStateUpdater = (updater) => {
 export const iniciarSesion = async (credenciales) => {
     try {
         const { data } = await api.post('/auth/login', credenciales)
+        const token = data.token || data.accessToken
         
         // Guardar los datos del usuario en localStorage si vienen en la respuesta
         if (data.usuario) {
             localStorage.setItem('usuario', JSON.stringify(data.usuario))
         }
         
-        if (data.token) {
-            localStorage.setItem('token', data.token)
+        if (token) {
+            localStorage.setItem('token', token)
         }
         
         // Actualizar estado global si está disponible
-        if (authStateUpdater && data.token) {
-          authStateUpdater(data.token, data.usuario)
+                if (authStateUpdater && token) {
+                    authStateUpdater(token, data.usuario)
         }
                 emitAuthChanged()
         
         // Conectar Socket.IO con el token
-        if (data.token) {
-            conectarSocket(data.token)
+        if (token) {
+            conectarSocket(token)
         }
-        
-        return data
+
+        return {
+            ...data,
+            token
+        }
     } catch (error) {
                 const status = error?.response?.status ?? 'N/A'
                 const mensaje = error?.response?.data?.message ?? error?.message ?? 'Error desconocido'

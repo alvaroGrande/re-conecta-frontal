@@ -5,7 +5,7 @@
     <ImpersonationBanner />
     <Header />
 
-    <main class="flex-grow flex flex-col max-w-full p-4">
+    <main class="grow flex flex-col max-w-full p-4">
       <RouterView />
     </main>
 
@@ -50,12 +50,14 @@
       @continue="handleContinueSession"
       @timeout="handleSessionTimeout"
     />
+
+    <DevSocketDebugPanel v-if="showSocketDebug" />
   </div>
 </template>
 
 <script setup>
 import { Analytics } from '@vercel/analytics/vue';
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import Header from '@layout/Header.vue'
 import Footer from '@layout/Footer.vue'
 import ImpersonationBanner from '@layout/ImpersonationBanner.vue'
@@ -70,10 +72,12 @@ import Button from 'primevue/button'
 import { INACTIVITY_CONFIG } from '@helpers/constants'
 import { useTheme } from '@composables/useTheme'
 import { useAuth } from '@composables/useAuth'
+import DevSocketDebugPanel from '@shared/DevSocketDebugPanel.vue'
 
 const toast = useToast();
 const { initTheme } = useTheme()
 const { setAuth } = useAuth()
+const showSocketDebug = import.meta.env.DEV
 
 // Detectar inactividad del usuario
 const { 

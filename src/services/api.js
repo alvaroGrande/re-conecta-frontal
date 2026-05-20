@@ -29,6 +29,9 @@ api.interceptors.response.use(
     if (status === 401 && !isLoginRequest) {
       localStorage.removeItem('token')
       localStorage.removeItem('usuario')
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new Event('auth-updated'))
+      }
       router.push({ name: 'Login' })
       return Promise.reject(error)
     }

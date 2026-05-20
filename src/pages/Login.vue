@@ -177,13 +177,15 @@ async function handleSubmit() {
             password: password.value
         }
         const res = await login(data)
-        if (!res.ok) {
-            errorMessage.value = res.message || 'Error de autenticación'
+        const token = res?.token || res?.accessToken
+
+        if (!token) {
+            errorMessage.value = res?.message || 'Error de autenticación'
             return
         }
 
         // Actualizar estado global de autenticación
-        setAuth(res.accessToken, res.usuario)
+        setAuth(token, res.usuario)
         
         if (remember.value) localStorage.setItem('savedUser', username.value.trim())
         else localStorage.removeItem('savedUser')

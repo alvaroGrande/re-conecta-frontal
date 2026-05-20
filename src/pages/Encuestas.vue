@@ -1,40 +1,53 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800">
+  <div class="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800">
     <!-- Encabezado -->
     <EncuestasHeader
       :mostrar-activas="mostrarActivas"
       :es-admin="esAdmin"
+      :mostrar-plantillas="mostrarPlantillas"
       @cambiar-filtro="cambiarFiltro"
       @crear="abrirModalCrear"
+      @plantillas="togglePlantillas"
     />
 
     <div class="max-w-7xl mx-auto px-4 py-8">
-      <!-- Resumen por mes (solo encuestas cerradas) -->
-      <ResumenEncuestas
-        v-if="!mostrarActivas"
-        :encuestas="encuestas.filter(e => e.estado !== 'activa')"
-        :filtro-anio="filtroResumenAnio"
-        :filtro-mes="filtroResumenMes"
-        @filtrar="onFiltrarResumen"
-      />
+      <!-- Vista de plantillas (solo admin/coordinador) -->
+      <div v-if="mostrarPlantillas && esAdmin">
+        <PlantillasEncuestas
+          :es-admin="esAdmin"
+          @usar-plantilla="abrirModalDesdePlantilla"
+        />
+      </div>
 
-      <!-- Lista de encuestas -->
-      <EncuestasLista
-        :encuestas="encuestasFilteradas"
-        :cargando="cargando"
-        :es-activa="mostrarActivas"
-        :es-admin="esAdmin"
-        :creadores="creadoresUnicos"
-        :filtro-creador="filtroCreador"
-        :filtro-anio="filtroResumenAnio"
-        :filtro-mes="filtroResumenMes"
-        :filtro-texto="filtroTexto"
-        :buscando="buscando"
-        @seleccionar="seleccionarEncuesta"
-        @filtrar-creador="onFiltrarCreador"
-        @filtrar-mes="onFiltrarResumen"
-        @buscar="t => { filtroTexto = t; onBuscar() }"
-      />
+      <!-- Vista normal de encuestas -->
+      <template v-else>
+        <!-- Resumen por mes (solo encuestas cerradas) -->
+        <ResumenEncuestas
+          v-if="!mostrarActivas"
+          :encuestas="encuestas.filter(e => e.estado !== 'activa')"
+          :filtro-anio="filtroResumenAnio"
+          :filtro-mes="filtroResumenMes"
+          @filtrar="onFiltrarResumen"
+        />
+
+        <!-- Lista de encuestas -->
+        <EncuestasLista
+          :encuestas="encuestasFilteradas"
+          :cargando="cargando"
+          :es-activa="mostrarActivas"
+          :es-admin="esAdmin"
+          :creadores="creadoresUnicos"
+          :filtro-creador="filtroCreador"
+          :filtro-anio="filtroResumenAnio"
+          :filtro-mes="filtroResumenMes"
+          :filtro-texto="filtroTexto"
+          :buscando="buscando"
+          @seleccionar="seleccionarEncuesta"
+          @filtrar-creador="onFiltrarCreador"
+          @filtrar-mes="onFiltrarResumen"
+          @buscar="t => { filtroTexto = t; onBuscar() }"
+        />
+      </template>
     </div>
 
     <!-- Modal de encuesta -->
@@ -78,7 +91,7 @@
     <Dialog 
       v-model:visible="mostrarModalCrear" 
       modal 
-      header="Crear nueva encuesta"
+      :header="plantillaParaFormulario ? `Nueva encuesta — desde plantilla: ${plantillaParaFormulario.titulo}` : 'Crear nueva encuesta'"
       :style="{ width: '100%', maxWidth: '900px' }"
       @hide="cerrarModalCrear"
     >
@@ -86,6 +99,7 @@
         :cargando="cargandoCrear"
         :es-coordinador="usuarioActual?.rol === 2"
         :usuarios-coordinados="usuariosCoordinados"
+        :plantilla-inicial="plantillaParaFormulario"
         @crear="crearNuevaEncuesta"
         @cancelar="cerrarModalCrear"
       />
@@ -105,6 +119,7 @@ import EncuestaResultados from '@features/Encuestas/EncuestaResultados.vue'
 import AdminEncuestaDetalle from '@features/Encuestas/AdminEncuestaDetalle.vue'
 import CrearEncuestaForm from '@features/Encuestas/CrearEncuestaForm.vue'
 import ResumenEncuestas from '@features/Encuestas/ResumenEncuestas.vue'
+import PlantillasEncuestas from '@features/Encuestas/PlantillasEncuestas.vue'
 import { obtenerEncuestas, crearRespuestaEncuesta, obtenerResultadosEncuesta, crearEncuesta } from '@services/encuestas'
 import { getUsuarios } from '@services/usuarios'
 import { showSuccess, showError } from '@services/toastService'
@@ -114,10 +129,12 @@ const route = useRoute()
 
 const encuestas = ref([])
 // Inicializar desde la URL: ?vista=pasadas activa el modo pasadas
-const mostrarActivas = ref(route.query.vista !== 'pasadas')
-const cargando = ref(false)
-const mostrarModal = ref(false)
+const mostrarActivas    = ref(route.query.vista !== 'pasadas')
+const mostrarPlantillas = computed(() => route.name === 'EncuestasPlantillas')
+const cargando          = ref(false)
+const mostrarModal      = ref(false)
 const mostrarModalCrear = ref(false)
+const plantillaParaFormulario = ref(null)
 const encuestaSeleccionada = ref(null)
 const resultados = ref(null)
 const yaRespondida = ref(false)
@@ -289,6 +306,27 @@ const cerrarModal = () => {
 
 const cerrarModalCrear = () => {
   mostrarModalCrear.value = false
+  plantillaParaFormulario.value = null
+}
+
+const abrirModalDesdePlantilla = async (plantilla) => {
+  plantillaParaFormulario.value = plantilla
+  // Si es coordinador, cargar sus usuarios antes de abrir el modal
+  if (usuarioActual.value?.rol === 2) {
+    try {
+      const { data } = await getUsuarios()
+      usuariosCoordinados.value = data || []
+    } catch {
+      usuariosCoordinados.value = []
+    }
+  }
+  mostrarModalCrear.value = true
+}
+
+const onEncuestaCreada = async () => {
+  mostrarPlantillas.value = false
+  await cargarEncuestas()
+  showSuccess('Encuesta creada correctamente desde la plantilla')
 }
 
 const crearNuevaEncuesta = async (datoEncuesta) => {
@@ -308,9 +346,16 @@ const crearNuevaEncuesta = async (datoEncuesta) => {
 }
 
 const cambiarFiltro = (esActiva) => {
-  // replace en lugar de push: cambiar filtro no debe acumular historial
   const query = esActiva ? {} : { vista: 'pasadas' }
   router.replace({ name: 'Encuestas', query })
+}
+
+const togglePlantillas = () => {
+  if (mostrarPlantillas.value) {
+    router.push({ name: 'Encuestas', query: mostrarActivas.value ? {} : { vista: 'pasadas' } })
+  } else {
+    router.push({ name: 'EncuestasPlantillas' })
+  }
 }
 
 const manejarEncuestaCerrada = async () => {
@@ -373,17 +418,18 @@ const cargarEncuestaDesdeURL = async () => {
   }
 }
 
-// Limpiar filtro de mes al cambiar a vista activas
+// Watch para ?vista query param (pasadas / activas)
 watch(() => route.query.vista, (vistaQuery) => {
   const deberiaSerActiva = vistaQuery !== 'pasadas'
-  // Guard: no-admins no pueden acceder a la vista de pasadas
-  if (!deberiaSerActiva && !esAdmin.value) {
+
+  // Guard: no-admins no pueden acceder a pasadas
+  if (vistaQuery === 'pasadas' && !esAdmin.value) {
     router.replace({ name: 'Encuestas' })
     return
   }
+
   if (mostrarActivas.value !== deberiaSerActiva) {
     mostrarActivas.value = deberiaSerActiva
-    // Limpiar filtros al cambiar de vista
     filtroResumenAnio.value = null
     filtroResumenMes.value  = null
     filtroCreador.value     = null
@@ -404,14 +450,17 @@ watch(() => route.params.id, (newId) => {
 onMounted(async () => {
   cargarUsuario()
 
-  // Guard: si un no-admin accede directamente con ?vista=pasadas, redirigir a activas
+  // Guard: si un no-admin accede directamente a plantillas o pasadas, redirigir
+  if (route.name === 'EncuestasPlantillas' && !esAdmin.value) {
+    await router.replace({ name: 'Encuestas' })
+  }
   if (route.query.vista === 'pasadas' && !esAdmin.value) {
     mostrarActivas.value = true
     await router.replace({ name: 'Encuestas' })
   }
 
   await cargarEncuestas()
-  
+
   // Cargar encuesta si viene en la URL
   if (route.params.id) {
     await cargarEncuestaDesdeURL()

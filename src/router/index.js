@@ -19,6 +19,10 @@ const Calendario = () => import('@pages/Calendario.vue')
 const NotFound = () => import('@pages/NotFound.vue')
 const RolesPermisos = () => import('@pages/RolesPermisos.vue')
 const Configuracion = () => import('@pages/Configuracion.vue')
+const CentroNotificaciones = () => import('@pages/CentroNotificaciones.vue')
+const NotificacionesRecibidas = () => import('@pages/NotificacionesRecibidas.vue')
+const NotificacionesEnviadas = () => import('@pages/NotificacionesEnviadas.vue')
+const Chat = () => import('@pages/Chat.vue')
 
 /**
  * meta.permission: permiso requerido para acceder a la ruta (ej: 'dashboard:ver').
@@ -35,12 +39,28 @@ const routes = [
   { path: '/perfil', component: Perfil, name: 'Perfil', meta: { permission: 'perfil:ver' } },
   { path: '/talleres', component: Talleres, name: 'Talleres', meta: { permission: 'talleres:ver' } },
   { path: '/talleres/archivados', component: TalleresArchivados, name: 'TalleresArchivados', meta: { permission: 'talleres_archivados:ver' } },
+  { path: '/encuestas/plantillas', component: () => import('@pages/Encuestas.vue'), name: 'EncuestasPlantillas', meta: { permission: 'encuestas:ver' } },
   { path: '/encuestas/:id?', component: Encuestas, name: 'Encuestas', meta: { permission: 'encuestas:ver' } },
   { path: '/calendario', component: Calendario, name: 'Calendario', meta: { permission: 'calendario:ver' } },
   { path: '/videollamada', component: VideoCall, name: 'Videollamadas', meta: { permission: 'videollamadas:ver' } },
   { path: '/usuarios', component: Usuarios, name: 'Usuarios', meta: { permission: 'usuarios:ver' } },
   { path: '/roles-permisos', component: RolesPermisos, name: 'RolesPermisos', meta: { permission: 'roles:gestionar' } },
   { path: '/configuracion', component: Configuracion, name: 'Configuracion', meta: { permission: 'configuracion:ver' } },
+  { path: '/chat', component: Chat, name: 'Chat', meta: { permission: 'chat:ver' } },
+  { path: '/chat/general', component: Chat, name: 'ChatGeneral', meta: { permission: 'chat:ver' } },
+  { path: '/chat/g/:slug', component: Chat, name: 'ChatGrupo', meta: { permission: 'chat:ver' } },
+  { path: '/chat/d/:chatId', component: Chat, name: 'ChatDirecto', meta: { permission: 'chat:ver' } },
+  {
+    path: '/notificaciones',
+    component: CentroNotificaciones,
+    name: 'CentroNotificaciones',
+    meta: { permission: 'notificaciones:ver' },
+    redirect: { name: 'NotificacionesRecibidas' },
+    children: [
+      { path: 'recibidas', component: NotificacionesRecibidas, name: 'NotificacionesRecibidas' },
+      { path: 'enviadas', component: NotificacionesEnviadas, name: 'NotificacionesEnviadas' }
+    ]
+  },
   // Ruta catch-all para 404 - debe estar al final
   { path: '/:pathMatch(.*)*', component: NotFound, name: 'NotFound' }
 ]

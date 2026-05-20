@@ -11,7 +11,7 @@ const TIPO_PAGO_CURSO = {
 // Configuración de timers de inactividad
 const INACTIVITY_CONFIG = {
   // Tiempo de inactividad antes de mostrar la primera advertencia (en milisegundos)
-  WARNING_TIMEOUT: 60000, // 15 segundos
+  WARNING_TIMEOUT: 3 * 60 * 1000, // 3 minutos
   // Tiempo del contador de advertencia antes de cerrar sesión (en segundos)
   COUNTDOWN_DURATION: 30 // 30 segundos
 };

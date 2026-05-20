@@ -42,21 +42,92 @@
 
     <!-- Panel derecho: Preguntas con scroll independiente (2/3) -->
     <div class="lg:col-span-2 flex flex-col min-h-0">
-      <div class="flex items-center justify-between mb-3 flex-shrink-0">
+      <div class="flex items-center justify-between mb-3 shrink-0">
         <h3 class="font-semibold text-gray-800 dark:text-slate-100 flex items-center gap-2">
           <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           Preguntas ({{ formulario.preguntas.length }})
         </h3>
-        <Button 
-          icon="pi pi-plus"
-          label="Nueva pregunta"
-          severity="info"
-          size="small"
-          @click="agregarPregunta"
-        />
+        <div class="flex gap-2">
+          <Button
+            icon="pi pi-copy"
+            label="Añadir desde plantilla"
+            severity="help"
+            size="small"
+            @click="panelPlantillas = true"
+          />
+          <Button 
+            icon="pi pi-plus"
+            label="Nueva pregunta"
+            severity="info"
+            size="small"
+            @click="agregarPregunta"
+          />
+        </div>
       </div>
+
+      <!-- Panel lateral: selección de plantilla para importar preguntas -->
+      <Drawer
+        v-model:visible="panelPlantillas"
+        header="Añadir preguntas desde plantilla"
+        position="right"
+        :style="{ width: '420px' }"
+      >
+        <div class="flex flex-col h-full gap-4">
+          <!-- Cargando -->
+          <div v-if="cargandoPlantillas" class="flex justify-center py-8">
+            <ProgressSpinner style="width:32px;height:32px" />
+          </div>
+
+          <!-- Sin plantillas -->
+          <div v-else-if="plantillasDisponibles.length === 0" class="text-center py-8 text-gray-400 dark:text-slate-500 text-sm">
+            No hay plantillas disponibles
+          </div>
+
+          <!-- Lista de plantillas -->
+          <div v-else class="space-y-3 overflow-y-auto flex-1">
+            <div
+              v-for="pl in plantillasDisponibles"
+              :key="pl.id"
+              class="border border-gray-200 dark:border-slate-600 rounded-lg p-3 bg-white dark:bg-slate-800 hover:border-purple-400 dark:hover:border-purple-500 transition-colors"
+            >
+              <!-- Cabecera plantilla -->
+              <div class="flex items-start justify-between gap-2 mb-2">
+                <div>
+                  <p class="font-semibold text-sm text-gray-800 dark:text-slate-100">{{ pl.titulo }}</p>
+                  <p v-if="pl.descripcion" class="text-xs text-gray-400 dark:text-slate-400 mt-0.5">{{ pl.descripcion }}</p>
+                </div>
+                <span class="text-xs text-gray-400 dark:text-slate-500 shrink-0">{{ (pl.preguntas || []).length }} preg.</span>
+              </div>
+
+              <!-- Vista previa de preguntas -->
+              <ul class="text-xs text-gray-500 dark:text-slate-400 space-y-0.5 mb-3 pl-2">
+                <li
+                  v-for="(preg, idx) in (pl.preguntas || []).slice(0, 3)"
+                  :key="idx"
+                  class="truncate"
+                >
+                  <span class="mr-1 text-gray-300 dark:text-slate-600">{{ idx + 1 }}.</span>{{ preg.texto }}
+                </li>
+                <li v-if="(pl.preguntas || []).length > 3" class="text-gray-400 dark:text-slate-500 italic">
+                  + {{ pl.preguntas.length - 3 }} más…
+                </li>
+              </ul>
+
+              <!-- Botón añadir -->
+              <Button
+                icon="pi pi-plus-circle"
+                :label="`Añadir ${(pl.preguntas || []).length} pregunta(s)`"
+                size="small"
+                severity="help"
+                class="w-full"
+                @click="importarPreguntas(pl)"
+              />
+            </div>
+          </div>
+        </div>
+      </Drawer>
 
       <div v-if="formulario.preguntas.length === 0" class="flex-1 flex items-center justify-center bg-gray-50 dark:bg-slate-800 rounded-lg border-2 border-dashed border-gray-300 dark:border-slate-600">
         <div class="text-center">
@@ -77,7 +148,7 @@
         >
           <!-- Header compacto -->
           <div class="flex items-start gap-2 mb-2">
-            <span class="flex-shrink-0 w-6 h-6 flex items-center justify-center bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-xs font-bold">
+            <span class="shrink-0 w-6 h-6 flex items-center justify-center bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-xs font-bold">
               {{ idx + 1 }}
             </span>
             <Select 
@@ -145,10 +216,10 @@
     </div>
 
     <!-- Footer sticky: Dirigida a, Notificaciones y Botones -->
-    <div class="border-t border-gray-200 dark:border-slate-600 pt-2 mt-0 bg-white dark:bg-slate-900 flex-shrink-0">
+    <div class="border-t border-gray-200 dark:border-slate-600 pt-2 mt-0 bg-white dark:bg-slate-900 shrink-0">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-2">
         <!-- Resumen -->
-          <div class="bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950 dark:to-blue-950 rounded-lg p-2 border border-green-200 dark:border-green-800">
+          <div class="bg-linear-to-br from-green-50 to-blue-50 dark:from-green-950 dark:to-blue-950 rounded-lg p-2 border border-green-200 dark:border-green-800">
           <h4 class="font-medium text-xs text-gray-700 dark:text-slate-300 mb-1 flex items-center gap-1">
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -286,7 +357,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import Textarea from 'primevue/textarea'
@@ -294,8 +365,12 @@ import DatePicker from 'primevue/datepicker'
 import Button from 'primevue/button'
 import Select from 'primevue/select'
 import MultiSelect from 'primevue/multiselect'
+import Drawer from 'primevue/drawer'
+import ProgressSpinner from 'primevue/progressspinner'
+import { useToast } from 'primevue/usetoast'
 
 import { showSuccess, showError } from '@services/toastService'
+import { obtenerPlantillas } from '@services/encuestas'
 
 const props = defineProps({
   cargando: {
@@ -309,10 +384,50 @@ const props = defineProps({
   usuariosCoordinados: {
     type: Array,
     default: () => []
+  },
+  plantillaInicial: {
+    type: Object,
+    default: null
   }
 })
 
 const emit = defineEmits(['crear', 'cancelar'])
+
+const toast = useToast()
+
+// ── Plantillas disponibles para importar preguntas ──
+const panelPlantillas      = ref(false)
+const cargandoPlantillas   = ref(false)
+const plantillasDisponibles = ref([])
+
+onMounted(async () => {
+  cargandoPlantillas.value = true
+  try {
+    plantillasDisponibles.value = await obtenerPlantillas()
+  } catch {
+    // silencioso — la funcionalidad es opcional
+  } finally {
+    cargandoPlantillas.value = false
+  }
+})
+
+/**
+ * Importa las preguntas de una plantilla añadiéndolas al final del formulario.
+ */
+function importarPreguntas(plantilla) {
+  const nuevas = (plantilla.preguntas || []).map(p => ({
+    texto:   p.texto,
+    tipo:    p.tipo,
+    opciones: (p.opciones || [{ texto: '' }]).map(o => ({ texto: o.texto }))
+  }))
+  formulario.value.preguntas.push(...nuevas)
+  toast.add({
+    severity: 'success',
+    summary:  'Preguntas añadidas',
+    detail:   `Se añadieron ${nuevas.length} pregunta(s) de "${plantilla.titulo}"`,
+    life:     3000,
+  })
+}
 
 const tiposPreguntas = [
   { label: 'Opción múltiple', value: 'multiple' },
@@ -327,17 +442,42 @@ const rolesObjetivo = [
 ]
 
 const MAX_RESPUESTAS_MULTIPLE = ref(4)
-const formulario = ref({
-  titulo: '',
-  descripcion: '',
-  fecha_fin: new Date(),
-  rol_objetivo: null,
-  usuarios_destino: [],
-  notificar_admins: true,
-  notificar_coordinadores: true,
-  notificar_usuarios: true,
-  preguntas: []
-})
+
+function formularioDesde(plantilla) {
+  if (!plantilla) return {
+    titulo: '',
+    descripcion: '',
+    fecha_fin: new Date(),
+    rol_objetivo: null,
+    usuarios_destino: [],
+    notificar_admins: true,
+    notificar_coordinadores: true,
+    notificar_usuarios: true,
+    preguntas: []
+  }
+  return {
+    titulo: plantilla.titulo || '',
+    descripcion: plantilla.descripcion || '',
+    fecha_fin: new Date(),
+    rol_objetivo: plantilla.rol_objetivo ?? null,
+    usuarios_destino: [],
+    notificar_admins: true,
+    notificar_coordinadores: true,
+    notificar_usuarios: true,
+    preguntas: (plantilla.preguntas || []).map(p => ({
+      texto: p.texto,
+      tipo: p.tipo,
+      opciones: (p.opciones || [{ texto: '' }]).map(o => ({ texto: o.texto }))
+    }))
+  }
+}
+
+const formulario = ref(formularioDesde(props.plantillaInicial))
+
+// Cuando cambia la plantilla (se reutiliza el modal), re-cargar formulario
+watch(() => props.plantillaInicial, (nueva) => {
+  formulario.value = formularioDesde(nueva)
+}, { deep: true })
 
 // Al abrir con usuariosCoordinados cargados, pre-seleccionar todos
 watch(() => props.usuariosCoordinados, (lista) => {
