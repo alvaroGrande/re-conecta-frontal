@@ -21,17 +21,18 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import UsuariosLista from '@features/Usuarios/UsuariosLista.vue'
 import EditarUsuarioModal from '@features/Usuarios/EditarUsuarioModal.vue'
 import { getUsuario } from '@services/usuarios'
 import { showError } from '@services/toastService'
 
+const router = useRouter()
 const mostrarModal = ref(false)
 const usuarioSeleccionado = ref(null)
 
 const handleNuevoUsuario = () => {
-  usuarioSeleccionado.value = null
-  mostrarModal.value = true
+  router.push({ name: 'CrearUsuario' })
 }
 
 const handleEditarUsuario = async (usuarioId) => {

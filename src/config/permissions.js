@@ -35,6 +35,7 @@ export const PERMISOS = {
   USUARIOS_EDITAR: 'usuarios:editar',
   USUARIOS_ELIMINAR: 'usuarios:eliminar',
 
+
   // Encuestas
   ENCUESTAS_VER: 'encuestas:ver',
   ENCUESTAS_CREAR: 'encuestas:crear',
@@ -90,6 +91,7 @@ export const PERMISOS_POR_ROL = {
 
     PERMISOS.USUARIOS_VER,
     PERMISOS.USUARIOS_VER_DETALLE,
+    PERMISOS.USUARIOS_CREAR,
 
     PERMISOS.ENCUESTAS_VER,
     PERMISOS.ENCUESTAS_CREAR,

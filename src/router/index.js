@@ -10,6 +10,7 @@ const Perfil = () => import('@pages/Perfil.vue')
 const Login = () => import('@pages/Login.vue')
 const VideoCall = () => import('@pages/VideoCall.vue')
 const Usuarios = () => import('@pages/Usuarios.vue')
+const CrearUsuario = () => import('@pages/CrearUsuario.vue')
 const Dashboard = () => import('@pages/Dashboard.vue')
 const PerfilUsuario = () => import('@pages/PerfilUsuario.vue')
 const Talleres = () => import('@pages/Talleres.vue')
@@ -44,6 +45,7 @@ const routes = [
   { path: '/calendario', component: Calendario, name: 'Calendario', meta: { permission: 'calendario:ver' } },
   { path: '/videollamada', component: VideoCall, name: 'Videollamadas', meta: { permission: 'videollamadas:ver' } },
   { path: '/usuarios', component: Usuarios, name: 'Usuarios', meta: { permission: 'usuarios:ver' } },
+  { path: '/usuarios/nuevo', component: CrearUsuario, name: 'CrearUsuario', meta: { permission: 'usuarios:crear' } },
   { path: '/roles-permisos', component: RolesPermisos, name: 'RolesPermisos', meta: { permission: 'roles:gestionar' } },
   { path: '/configuracion', component: Configuracion, name: 'Configuracion', meta: { permission: 'configuracion:ver' } },
   { path: '/chat', component: Chat, name: 'Chat', meta: { permission: 'chat:ver' } },

@@ -9,7 +9,7 @@
   >
     <!-- Formulario -->
     <form @submit.prevent="guardar" class="space-y-2">
-      <!-- Nombre, Apellidos y Email -->
+      <!-- Nombre, apellidos y email -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div>
           <label class="block text-xs font-medium text-gray-700 mb-1">
@@ -43,17 +43,42 @@
         </div>
         <div>
           <label class="block text-xs font-medium text-gray-700 mb-1">
-            Apellidos *
+            Apellido 1 *
           </label>
           <input
-            v-model="formulario.Apellidos"
+            v-model="formulario.apellido1"
             type="text"
             required
             class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Pérez García"
+            placeholder="Pérez"
           />
         </div>
-</div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">
+            Apellido 2
+          </label>
+          <input
+            v-model="formulario.apellido2"
+            type="text"
+            class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="García"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-700 mb-1">
+            DNI
+          </label>
+          <input
+            v-model="formulario.DNI"
+            type="text"
+            class="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="12345678A"
+          />
+        </div>
+      </div>
 
       <!-- Rol, Género y Fecha de Nacimiento -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -185,7 +210,9 @@ const guardando = ref(false)
 const usuarioOriginal = ref(null)
 const formulario = ref({
   nombre: '',
-  Apellidos: '',
+  apellido1: '',
+  apellido2: '',
+  DNI: '',
   email: '',
   rol: '',
   genero: '',
@@ -204,7 +231,9 @@ watch(
       usuarioOriginal.value = props.usuario
       formulario.value = {
         nombre: props.usuario.nombre || '',
-        Apellidos: props.usuario.Apellidos || '',
+        apellido1: props.usuario.apellido1 || (props.usuario.Apellidos ? String(props.usuario.Apellidos).split(/\s+/).filter(Boolean)[0] || '' : ''),
+        apellido2: props.usuario.apellido2 || (props.usuario.Apellidos ? String(props.usuario.Apellidos).split(/\s+/).filter(Boolean).slice(1).join(' ') : ''),
+        DNI: props.usuario.DNI || props.usuario.dni || '',
         email: props.usuario.email || '',
         rol: String(props.usuario.rol) || '',
         genero: props.usuario.genero || '',
@@ -218,7 +247,9 @@ watch(
       usuarioOriginal.value = null
       formulario.value = {
         nombre: '',
-        Apellidos: '',
+        apellido1: '',
+        apellido2: '',
+        DNI: '',
         email: '',
         rol: '',
         genero: '',
@@ -238,7 +269,8 @@ const guardar = async () => {
     // Convertir rol a número
     const datosActualizados = {
       ...formulario.value,
-      rol: parseInt(formulario.value.rol)
+      rol: parseInt(formulario.value.rol),
+      Apellidos: [formulario.value.apellido1, formulario.value.apellido2].filter(Boolean).join(' ')
     }
 
     if (usuarioOriginal.value?.id) {

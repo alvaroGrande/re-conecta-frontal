@@ -59,12 +59,32 @@
                         />
                       </div>
                       <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Apellidos</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Apellido 1</label>
                         <input
-                          v-model="datosEdicion.Apellidos"
+                          v-model="datosEdicion.apellido1"
                           type="text"
                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Apellidos"
+                          placeholder="Primer apellido"
+                        />
+                      </div>
+                    </div>
+                    <div class="flex gap-3">
+                      <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Apellido 2</label>
+                        <input
+                          v-model="datosEdicion.apellido2"
+                          type="text"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Segundo apellido"
+                        />
+                      </div>
+                      <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">DNI</label>
+                        <input
+                          v-model="datosEdicion.DNI"
+                          type="text"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="12345678A"
                         />
                       </div>
                     </div>
@@ -150,7 +170,7 @@
                   {{ rolNombre }}
                 </span>
                 <span class="text-sm text-gray-500">
-                  Último acceso: {{ formatearFecha(usuario.ultimoInicio) }}
+                  Último acceso: {{ formatearFecha(usuario.ultimo_inicio) }}
                 </span>
               </div>
             </div>
@@ -281,7 +301,9 @@ const modoEdicion = ref(false)
 const guardando = ref(false)
 const datosEdicion = ref({
   nombre: '',
-  Apellidos: '',
+  apellido1: '',
+  apellido2: '',
+  DNI: '',
   email: '',
   telefono: '',
   rol: 3
@@ -320,13 +342,14 @@ const puedeVerPerfil = computed(() => {
 const iniciales = computed(() => {
   if (!usuario.value) return ''
   const nombre = usuario.value.nombre?.[0] || ''
-  const apellido = usuario.value.Apellidos?.[0] || ''
+  const apellido = (usuario.value.apellido1 || usuario.value.Apellidos || '').charAt(0) || ''
   return `${nombre}${apellido}`.toUpperCase()
 })
 
 const nombreCompleto = computed(() => {
   if (!usuario.value) return ''
-  return `${usuario.value.nombre || ''} ${usuario.value.Apellidos || ''}`.trim()
+  const apellidos = [usuario.value.apellido1, usuario.value.apellido2].filter(Boolean).join(' ') || usuario.value.Apellidos || ''
+  return `${usuario.value.nombre || ''} ${apellidos}`.trim()
 })
 
 const rolNombre = computed(() => {
@@ -347,7 +370,7 @@ const rolClasses = computed(() => {
 
 const estadoTexto = computed(() => {
   if (!usuario.value) return ''
-  const ultimaActividad = new Date(usuario.value.ultima_actividad || usuario.value.ultimoInicio)
+  const ultimaActividad = new Date(usuario.value.ultima_actividad || usuario.value.ultimo_inicio)
   const hace5min = new Date(Date.now() - 5 * 60 * 1000)
   return ultimaActividad > hace5min ? 'Conectado' : 'Desconectado'
 })
@@ -497,7 +520,9 @@ const activarModoEdicion = () => {
   
   datosEdicion.value = {
     nombre: usuario.value.nombre || '',
-    Apellidos: usuario.value.Apellidos || '',
+    apellido1: usuario.value.apellido1 || (usuario.value.Apellidos ? String(usuario.value.Apellidos).split(/\s+/).filter(Boolean)[0] || '' : ''),
+    apellido2: usuario.value.apellido2 || (usuario.value.Apellidos ? String(usuario.value.Apellidos).split(/\s+/).filter(Boolean).slice(1).join(' ') : ''),
+    DNI: usuario.value.DNI || usuario.value.dni || '',
     email: usuario.value.email || '',
     telefono: usuario.value.telefono || '',
     rol: usuario.value.rol || 3
@@ -510,7 +535,9 @@ const cancelarEdicion = () => {
   modoEdicion.value = false
   datosEdicion.value = {
     nombre: '',
-    Apellidos: '',
+    apellido1: '',
+    apellido2: '',
+    DNI: '',
     email: '',
     telefono: '',
     rol: 3
@@ -530,10 +557,13 @@ const guardarCambios = async () => {
   try {
     const datosActualizar = {
       nombre: datosEdicion.value.nombre,
-      Apellidos: datosEdicion.value.Apellidos,
+      apellido1: datosEdicion.value.apellido1,
+      apellido2: datosEdicion.value.apellido2,
+      DNI: datosEdicion.value.DNI,
       email: datosEdicion.value.email,
       telefono: datosEdicion.value.telefono,
-      rol: datosEdicion.value.rol
+      rol: datosEdicion.value.rol,
+      Apellidos: [datosEdicion.value.apellido1, datosEdicion.value.apellido2].filter(Boolean).join(' ')
     }
     
     await actualizarUsuario(userId.value, datosActualizar)

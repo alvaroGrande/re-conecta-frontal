@@ -108,7 +108,7 @@ export const conectarSocket = (token) => {
     return socket;
   }
 
-  const url = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+  const url = import.meta.env.VITE_API_URL || 'http://localhost:3003';
 
   socket = io(url, {
     auth: {

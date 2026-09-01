@@ -102,13 +102,33 @@
                 />
               </div>
 
-              <!-- Apellidos -->
+              <!-- Apellido 1 -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">{{ $t('profile.personalInfo.lastName') }}</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Apellido 1 *</label>
                 <InputText
-                  v-model="formulario.Apellidos"
+                  v-model="formulario.apellido1"
                   class="w-full"
-                  :placeholder="$t('profile.personalInfo.lastNamePlaceholder')"
+                  placeholder="Primer apellido"
+                />
+              </div>
+
+              <!-- Apellido 2 -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Apellido 2</label>
+                <InputText
+                  v-model="formulario.apellido2"
+                  class="w-full"
+                  placeholder="Segundo apellido (opcional)"
+                />
+              </div>
+
+              <!-- DNI -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">DNI</label>
+                <InputText
+                  v-model="formulario.DNI"
+                  class="w-full"
+                  placeholder="12345678A"
                 />
               </div>
 
@@ -202,7 +222,9 @@ const { t, locale } = useI18n()
 const usuario = ref({})
 const formulario = ref({
   nombre: '',
-  Apellidos: '',
+  apellido1: '',
+  apellido2: '',
+  DNI: '',
   email: '',
   telefono: ''
 })
@@ -216,7 +238,7 @@ const progressoFoto = ref(0)
 
 const iniciales = computed(() => {
   const nombre = usuario.value.nombre?.charAt(0) || ''
-  const apellido = usuario.value.Apellidos?.charAt(0) || ''
+  const apellido = (usuario.value.apellido1 || usuario.value.Apellidos || '').charAt(0) || ''
   return (nombre + apellido).toUpperCase()
 })
 
@@ -253,7 +275,9 @@ const cargarUsuario = () => {
   usuario.value = { ...usuarioLocal }
   formulario.value = {
     nombre: usuarioLocal.nombre || '',
-    Apellidos: usuarioLocal.Apellidos || '',
+    apellido1: usuarioLocal.apellido1 || (usuarioLocal.Apellidos ? String(usuarioLocal.Apellidos).split(/\s+/).filter(Boolean)[0] || '' : ''),
+    apellido2: usuarioLocal.apellido2 || (usuarioLocal.Apellidos ? String(usuarioLocal.Apellidos).split(/\s+/).filter(Boolean).slice(1).join(' ') : ''),
+    DNI: usuarioLocal.DNI || usuarioLocal.dni || '',
     email: usuarioLocal.email || '',
     telefono: usuarioLocal.telefono || ''
   }
@@ -262,7 +286,9 @@ const cargarUsuario = () => {
 const restablecerFormulario = () => {
   formulario.value = {
     nombre: usuario.value.nombre || '',
-    Apellidos: usuario.value.Apellidos || '',
+    apellido1: usuario.value.apellido1 || (usuario.value.Apellidos ? String(usuario.value.Apellidos).split(/\s+/).filter(Boolean)[0] || '' : ''),
+    apellido2: usuario.value.apellido2 || (usuario.value.Apellidos ? String(usuario.value.Apellidos).split(/\s+/).filter(Boolean).slice(1).join(' ') : ''),
+    DNI: usuario.value.DNI || usuario.value.dni || '',
     email: usuario.value.email || '',
     telefono: usuario.value.telefono || ''
   }

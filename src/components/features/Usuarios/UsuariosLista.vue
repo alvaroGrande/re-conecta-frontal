@@ -96,9 +96,9 @@
 
       <Column field="nombre" header="Nombre" style="min-width: 150px" />
       <Column field="email" header="Correo" style="min-width: 200px" />
-      <Column field="ultimoInicio" header="Último Inicio" style="min-width: 150px">
+      <Column field="ultimo_inicio" header="Último Inicio" style="min-width: 150px">
         <template #body="{ data }">
-          {{ formatearFecha(data.ultimoInicio) }}
+          {{ formatearFecha(data.ultimo_inicio) }}
         </template>
       </Column>
       <Column field="rol" header="Rol" style="min-width: 120px">
